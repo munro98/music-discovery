@@ -6,3 +6,5 @@ DB_CLUSTER=yourDBcluster
 SESS_SECRET=yourSessionSecret
 NODE_ENV='development'
 COOKIE_NAME='your-session-cookie-name'
+LASTFM_KEY='your-lastfm-api-key'
+YOUTUBE_KEY='your-youtube-api-key'

@@ -9,14 +9,13 @@ import {
 } from "reactstrap";
 import PropTypes from "prop-types";
 import { buttonClicked } from "../actions/uiActions";
-import './style.css';
 import store from '../store';
 import { isAuth } from '../actions/authActions'
 import {Navigate} from 'react-router-dom'
 
 
 var divStyle = {
-color:'white'
+//color:'white'
 };
 
 export class HomePage extends Component {
@@ -39,6 +38,7 @@ export class HomePage extends Component {
     return (
        <div>
           <h1 style={divStyle}> <strong>MERN</strong> Sessions Auth App </h1>
+          {this.props.youtube_api + "key"}
           <br/>
             <h5 style={divStyle}>Minimalistic Sessions based Authentication app <span role="img" aria-label="lock">🔒 </span><br></br>Built with React + Redux, NodeJS, Express, MongoDB and Bootstrap</h5>
             <h5 style={divStyle}>Uses Cookies <span role="img" aria-label="lock">🍪 </span></h5>
