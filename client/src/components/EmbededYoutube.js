@@ -175,8 +175,8 @@ class EmbededYoutube extends Component {
     // https://getbootstrap.com/docs/4.0/utilities/embed/
     render() {
         return (
-            <div class="justify-content-center embed-responsive embed-responsive-21by9">
-                <div class="embed-responsive-item" ref={(r) => { this.youtubePlayerAnchor = r }}></div>
+            <div className="justify-content-center embed-responsive embed-responsive-21by9">
+                <div className="embed-responsive-item" ref={(r) => { this.youtubePlayerAnchor = r }}></div>
             </div>
             
         )

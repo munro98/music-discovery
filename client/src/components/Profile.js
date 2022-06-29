@@ -31,7 +31,7 @@ export class Profile extends Component {
 
   render() {
     if(!this.props.authState.isAuthenticated) {
-    return <Navigate exact to="/" />
+    //return <Navigate exact to="/" />
     }
 
     const {user} = this.props.authState;

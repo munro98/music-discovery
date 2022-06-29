@@ -39,7 +39,7 @@ class SimilarArtistsTable extends Component {
         );
         //<div class="d-flex justify-content-center">
         return (
-            <div class="d-flex">
+            <div className="d-flex">
             <table id="songs">
                 <col width="66"></col>
                 <tbody>

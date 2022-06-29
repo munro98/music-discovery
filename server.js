@@ -54,7 +54,7 @@ app.use(
     store: mongoDBstore,
     cookie: {
       maxAge: MAX_AGE,
-      sameSite: 'none',
+      sameSite: false,
       secure: IS_PROD
     }
   })

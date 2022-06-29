@@ -65,11 +65,10 @@ class Slider extends Component {
 
     render() {
         return (
-        <div className="slidecontainer" >
-            <input ref={this.input}
-                type="range" min="0" max="10000" className="slider" id="slider" onChange={this.props.onChange}  />
-
-        </div>
+            <input  type="range" className="form-range" id="customRange1" min="0" max="10000"
+            ref={this.input} onChange={this.props.onChange}
+            ></input>
+            
         )
     }
 }

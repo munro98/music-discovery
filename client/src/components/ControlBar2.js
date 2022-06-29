@@ -125,14 +125,14 @@ class ControlBar2 extends Component {
                 <div style={{}} >
             <div>
             
-            <div style={{float: "left", width : "100px", margin: "0px"}}>
             
-            </div>
+            <Slider ref={this.slider} onChange={this.onSongSeekChange}></Slider>
+            
 
             <div style={{float : "left", margin: "16px", color: "rgb(240, 240, 240)"}}>
             <span > <a style={{color: "rgb(200, 200, 200)"}} href={
                     this.props.activeArtist === "" ? "/" : "?artist="+this.props.activeArtist
-                    }> {this.props.activeArtistName} </a> </span>
+                    }> {"Artist: " + this.props.activeArtistName} </a> </span>
             <br></br>
             <span style={{color: "rgb(240, 240, 240)"}}>{this.props.activeSongName}</span>
             
@@ -140,11 +140,7 @@ class ControlBar2 extends Component {
             </div>
             </div>
             </div>
-            <div style={{ height: "26px", marginTop: "0px", marginLeft: "auto", marginRight: "auto"/*, backgroundColor: "rgb(255, 0, 0)"*/}}> 
-                    <div style={{ marginTop: "2px", width: "44px", float: "left", fontFamily: "monospace, monospace", background: "transparent"}}>{this.secondsToMMSS(this.props.time)}</div>
-                    <div style={{ marginTop: "2px", width: "44px", float: "right", fontFamily: "monospace, monospace", background: "transparent"}}>{this.secondsToMMSS(this.props.duration)}</div>
-                    <div style={{marginLeft: "48px", marginRight: "50px"}}><Slider ref={this.slider} onChange={this.onSongSeekChange}></Slider></div>
-                </div>
+
             <div style={{}}> 
                 <div style={{ width: "240px",height: "50px",marginTop: "4px", marginLeft: "auto", marginRight: "auto", columnCount: 5/*, backgroundColor: "rgb(255, 0, 0)"*/}}> 
                     <div><center>

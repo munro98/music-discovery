@@ -10,12 +10,12 @@ import store from './store';
 
 class App extends Component {
 
-
   render () {
-  console.log("asd" + this.props.youtube_api);
-
     return (
       <Provider store={store}>
+        <Routes>
+          <Route exact path ="/profile" element={<Profile></Profile>}/>
+        </Routes>
         <HomePage youtube_api={this.props.youtube_api} lastfm_api={this.props.lastfm_api}/>
       </Provider>
     );
