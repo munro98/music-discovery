@@ -36,7 +36,7 @@ class SongTable extends Component {
     render() {
         let list = this.props.songs;
         let items = list.map( (val, i) =>
-            <tr key={i}>
+            <tr key={i} style={ i % 2 == 0 ? {backgroundColor: "rgba(0,0,0, 0.1)"} : {backgroundColor: "rgba(0,0,0, 0.0)"} }>
                 <td style={{overflow: 'hidden', whiteSpace: 'nowrap'}}>
                 <button id="play-button" style={stylePlayerButton} onClick={this.onPlayDown} song_id={i} song_name={val.name}>
                     <svg id="icon-skip-play" viewBox="0 0 24 24" width="100%" height="100%" style={{fill: "rgb(200, 200, 200)"}}>

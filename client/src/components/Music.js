@@ -10,7 +10,8 @@ import {
 import PropTypes from "prop-types";
 import { Navigate } from 'react-router-dom'
 import { logout } from '../actions/authActions';
-import { buttonReset} from '../actions/uiActions';
+import { buttonReset, changeControlBarText} from '../actions/uiActions';
+import {CHANGE_ARTIST} from '../reducers/musicReducer';
 
 import QueryString from 'query-string';
 
@@ -30,9 +31,6 @@ import {
 } from './EmbededYoutube';
 
 import SimilarArtistsTable from './SimilarArtistsTable';
-import { 
-    SimilarArtistsTable_CB_ENUMS,
-} from './SimilarArtistsTable';
 
 /*
 
@@ -71,6 +69,8 @@ export class Music extends Component {
         this.controlBar = React.createRef();
         this.currentFocus = undefined;
 
+        this.updateContent = this.updateContent.bind(this);
+
         //this.onPlayDown = this.onPlayDown.bind(this);
         //this.loadAnother = this.loadAnother.bind(this);
     }
@@ -92,15 +92,28 @@ export class Music extends Component {
   componentDidMount() {
     document.getElementById("main-music-app").addEventListener('build', function (e) { console.log(e)/* ... */ }, false);
 
-    const parsed = QueryString.parse(window.location.search);
-    console.log(parsed);
-
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log("Url params " + urlParams);
     let artistParam = "cher";
-    if (parsed.search) {
-      artistParam = parsed.search;
+    if (urlParams.get("artist")) {
+      artistParam = urlParams.get("artist");
+      this.props.changeArtist(artistParam);
     }
+    
 
-    let url = "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + artistParam + "&api_key=" + this.props.lastfm_api + "&format=json" //C%C3%A9line+Dion
+    this.updateContent();
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    console.log("Music component updating ")
+    if (prevProps.music.selectedArtist != this.props.music.selectedArtist) {
+      this.updateContent();
+    }
+  }
+
+  updateContent() {
+    let imePesme = this.props.music.selectedArtist.replace(/&/g, '%26');
+    let url = "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + imePesme + "&api_key=" + this.props.lastfm_api + "&format=json" //C%C3%A9line+Dion
     ///*
     fetch(url).then(response => {
         return response.json();
@@ -120,7 +133,7 @@ export class Music extends Component {
       });
       //*/
 
-      let urlTopSongs = "http://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=" + artistParam + "&api_key=" + this.props.lastfm_api + "&limit=20&format=json"
+      let urlTopSongs = "http://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=" + imePesme + "&api_key=" + this.props.lastfm_api + "&limit=20&format=json"
       fetch(urlTopSongs).then(response => {
           return response.json();
         }).then(data => {
@@ -224,7 +237,7 @@ export class Music extends Component {
   }
 
   getVID(songName) {
-    let imeBenda = this.state.artistName.replace(/&/g, '%26');
+    let imeBenda = this.props.music.selectedArtist.replace(/&/g, '%26');
     let imePesme = songName.replace(/&/g, '%26');
     // https://developers.google.com/youtube/v3/docs/search
     let url = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q="
@@ -245,7 +258,7 @@ export class Music extends Component {
   }
 
   onPlayFromTable(songName) {
-    let imeBenda = this.state.artistName.replace(/&/g, '%26');
+    let imeBenda = this.props.music.selectedArtist.replace(/&/g, '%26');
     let imePesme = songName.replace(/&/g, '%26');
     // https://developers.google.com/youtube/v3/docs/search
     let url = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q="
@@ -260,7 +273,7 @@ export class Music extends Component {
         this.ytPlayer.current.loadNewVideo(vID)
 
         if (true) {
-          this.setState({activeArtistName: this.state.artistName, activeSongName: songName});
+          this.setState({activeArtistName: this.props.music.selectedArtist, activeSongName: songName});
         }
         //this.setState({ytId: vID});
         //this.setState({artistTopSongs: top});
@@ -288,7 +301,7 @@ export class Music extends Component {
             <div className="row" >
                 <div className="col-sm-6">
                     <EmbededYoutube ref={this.ytPlayer} YTid={this.state.ytId} callbackHandler={this.callbackHandler}> </EmbededYoutube>
-                    <h2> {this.state.artistName} </h2>
+                    <h2> {this.props.music.selectedArtist} </h2>
                     <p>
                     Genres: {tags}
                     </p>
@@ -319,7 +332,16 @@ export class Music extends Component {
 
 const mapStateToProps = (state) => ({ //Maps state to redux store as props
   button: state.ui.button,
-  authState: state.auth
+  authState: state.auth,
+  music: state.music
 });
 
-export default connect(mapStateToProps, { logout, buttonReset })(Music);
+const changeArtist = ( artistName) => (dispatch) => {
+  console.log("dispatching " + artistName);
+  dispatch({
+    type: CHANGE_ARTIST,
+    payload: artistName
+  });
+};
+
+export default connect(mapStateToProps, { logout, buttonReset, changeArtist, changeControlBarText })(Music);

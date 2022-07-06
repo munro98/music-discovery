@@ -12,6 +12,7 @@ import store from '../store';
 import { isAuth } from '../actions/authActions'
 import {Navigate} from 'react-router-dom'
 
+import {CHANGE_ARTIST} from '../reducers/musicReducer';
 import Login from './Login';
 import Register from './Register';
 
@@ -26,6 +27,8 @@ export class NavBar extends Component {
       artistName: "",
       suggestions: [],
     }
+
+    this.searchInput = "";
 
 
     this.onSearchChange = this.onSearchChange.bind(this);
@@ -70,6 +73,7 @@ export class NavBar extends Component {
   }
 
   onSearchChange(e) {
+    this.searchInput = e.currentTarget.value;
     console.log(e.currentTarget.value);// e.g koan sound
     this.searchArtist(e.currentTarget.value);
 
@@ -84,7 +88,7 @@ export class NavBar extends Component {
 
       a = document.createElement("DIV");
       a.setAttribute("id", "autocomplete-list");
-      a.setAttribute("class", "autocomplete-items");
+      a.setAttribute("className", "autocomplete-items");
       //a.style.display = "contents"
       a.style.position = "fixed"
       
@@ -102,6 +106,11 @@ export class NavBar extends Component {
 
               b.addEventListener("click", function(e) {
                 inputEl.value = this.getElementsByTagName("input")[0].value;
+                
+                
+                self.searchInput = this.getElementsByTagName("input")[0].value;
+                console.log("inp = " + self.searchInput );
+
               /*close the list of autocompleted values,*/
               self.closeAllLists();
           });
@@ -111,8 +120,16 @@ export class NavBar extends Component {
 
   }
 
+  onSubmit = (e) => {
+    e.preventDefault();
+
+    console.log("Searching " + this.searchInput);
+    this.props.changeArtist(this.searchInput);
+    //this.props.login(user);
+  };
+
   onComponentDidUpdate() {
-    let e = document.getElementById("search");
+    console.log(this.props.music.selectedArtist)
   }
 
   addActive(x) {
@@ -167,7 +184,7 @@ export class NavBar extends Component {
                 <Link className="nav-link" exact to="/profile">Profile </Link>
             </li>
             <li className="nav-item">
-            <form autocomplete="off" action="/">
+            <form autoComplete="off" onSubmit={this.onSubmit}>
           <div style={{float: "right", marginTop: "auto", marginBottom: "auto", marginLeft: "16px", marginRight: "16px"}} class="autocomplete">
             <input style={{border: "none",fontSize: "17px", padding: "6px", marginTop: "auto", marginBottom: "auto"}} id="search" type="text" name="search" placeholder="Search Artist.." onChange={this.onSearchChange}></input>
             <input style={{border: "none",fontSize: "17px", padding: "6px", marginTop: "auto", marginBottom: "auto"}} type="submit" value="Search Artist"></input>
@@ -182,7 +199,28 @@ export class NavBar extends Component {
   }
 }
 const mapStateToProps = (state) => ({ //Maps state to redux store as props
-  authState: state.auth
+  authState: state.auth,
+  music: state.music
 });
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+      changeArtist: artist => {
+        dispatch({
+          type: CHANGE_ARTIST,
+          payload: artist
+        })
+    }
+  }
+}
 
-export default connect(mapStateToProps)(NavBar);
+const changeArtist = ( artistName) => (dispatch) => {
+  console.log("dispatching " + artistName);
+  let imePesme = artistName.replace(/&/g, '%26');
+        window.history.pushState("", 'Music', "/music/?artist="+imePesme);
+  dispatch({
+    type: CHANGE_ARTIST,
+    payload: artistName
+  });
+};
+
+export default connect(mapStateToProps, {changeArtist})(NavBar);

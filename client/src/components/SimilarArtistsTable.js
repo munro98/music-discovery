@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from "react-redux";
 
-// list of all possible enums in child
-const VIEW_CALLBACK_ENUMS = {
-    CLICK: 'SIMILAR_ARISTS/CLICK',
-  };
+
+import {CHANGE_ARTIST} from '../reducers/musicReducer';
 
 const divStyle = {
     width: "100%",
@@ -23,7 +22,9 @@ class SimilarArtistsTable extends Component {
     }
 
     onClickArtist(e) {
-        let id = e.currentTarget.getAttribute('artist_list_ind');
+        console.log("SimilarArtistsTable.onClick index " + e.ind);
+        let id = e.currentTarget.getAttribute('ind');
+        this.props.changeArtist(this.props.similarArtists[id].name);
     }
 
     render() {
@@ -31,9 +32,7 @@ class SimilarArtistsTable extends Component {
         let items = list.map( (val, i) =>
             <tr key={i}>
                 <td><img height="40px" src={val.image[val.image.length-1][Object.keys(val.image[val.image.length-1])[0]]} alt="artist" /></td>
-                <td><a href={
-                    "/music/?artist="+val.url.split("/")[val.url.split("/").length-1]
-                    }>{val.name}</a></td>
+                <td><button ind={i} onClick={this.onClickArtist}>{val.name}</button></td>
             </tr>
 
         );
@@ -54,8 +53,22 @@ class SimilarArtistsTable extends Component {
         )
     }
 }
+///*
+const mapStateToProps = (state) => ({ //Maps state to redux store as props
+    music: state.music
+  });
 
-export default SimilarArtistsTable
-export {
-    VIEW_CALLBACK_ENUMS as SIMILAR_ARTISTS_TABLE_CB_ENUMS,
+const changeArtist = ( artistName) => (dispatch) => {
+    console.log("dispatching " + artistName);
+    let imePesme = artistName.replace(/&/g, '%26');
+        window.history.pushState("", 'Music', "/music/?artist="+imePesme);
+    dispatch({
+      type: CHANGE_ARTIST,
+      payload: artistName
+    });
+      
   };
+  //*/
+//export default (SimilarArtistsTable);
+export default connect(mapStateToProps, {changeArtist})(SimilarArtistsTable);
+  
