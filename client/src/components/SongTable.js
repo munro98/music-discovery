@@ -43,7 +43,14 @@ class SongTable extends Component {
                         <path d="M 17.488289,12 4.3498907,3.6967476 V 20.303252 Z"></path>
                         <path d="M0 0h24v24H0z" fill="none"></path>
                     </svg>
-                    
+                </button>
+                </td>
+                <td style={{overflow: 'hidden', whiteSpace: 'nowrap'}}>
+                <button id="play-button" style={stylePlayerButton} onClick={this.onPlayDown} song_id={i} song_name={val.name}>
+                    <svg id="icon-skip-play" viewBox="0 0 24 24" width="100%" height="100%" style={{fill: "rgb(200, 200, 200)"}}>
+                        <path d="M 17.488289,12 4.3498907,3.6967476 V 20.303252 Z"></path>
+                        <path d="M0 0h24v24H0z" fill="none"></path>
+                    </svg>
                 </button>
                 </td>
                 <td style={{verticalAlign: "center"}}> <span style={{align: "lfet"}}>{" " + i}</span>{" -  " + val.name }</td>
@@ -53,11 +60,12 @@ class SongTable extends Component {
         // <div style={divStyle}>
         return (
             <div style={divStyle}>
+            <h5>Top Songs</h5>
             <table id="songs">
                 <tbody>
                 <tr>
                     <th></th>
-                    <th>Top Songs</th>
+                    <th></th>
                     <th></th>
                 </tr>
                 {items}

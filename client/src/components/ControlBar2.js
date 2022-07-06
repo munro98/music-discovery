@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from "react-redux";
+import { playPressed } from "../actions/uiActions";
+import{useSelector, useDispatch} from "react-redux"
 
 import Slider from './Slider';
 
@@ -32,7 +35,9 @@ const footerStyle = {
     backgroundColor: "#f5f5f5"
   }
 
+  
 class ControlBar2 extends Component {
+
     constructor(props) {
         super(props)
 
@@ -49,7 +54,6 @@ class ControlBar2 extends Component {
 
         this.slider = React.createRef();
         this.sliderVol = React.createRef();
-
     }
 
     onSongEnded() {
@@ -83,9 +87,10 @@ class ControlBar2 extends Component {
     }
 
     onPlayDown(e) {
-        this.props.callbackHandler(
-            VIEW_CALLBACK_ENUMS.PLAY,
-            "");
+        let event = new CustomEvent('build', { detail: "some text" });
+
+        document.getElementById("main-music-app").dispatchEvent(event);
+        
     }
 
     onPrevDown(e) {
@@ -180,8 +185,23 @@ class ControlBar2 extends Component {
         )
     }
 }
+const mapStateToProps = (state) => ({ //Maps state element in redux store to props
+    authState: state.auth,
+    status: state.status,
+    loading: state.ui.loading
 
-export default ControlBar2
+  });
+
+const mapDispatchToProps = dispatch => {
+    return {
+        playPressed: id => {
+        dispatch(playPressed())
+      }
+    }
+  }
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(ControlBar2)
 
 export {
     VIEW_CALLBACK_ENUMS as ControlBar2_CB_ENUMS,

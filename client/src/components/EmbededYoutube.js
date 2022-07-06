@@ -68,6 +68,7 @@ class EmbededYoutube extends Component {
     }
 
     reportVideoTime(){
+        return;// TODO: 
         this.props.callbackHandler(
             VIEW_CALLBACK_ENUMS.UPDATE,
             {time : this.player.getCurrentTime()});
@@ -79,7 +80,7 @@ class EmbededYoutube extends Component {
         //player.seekTo(time);
     }
 
-    playNewVideo(vID) {
+    loadNewVideo(vID) {
         this.player.loadVideoById(vID);
     }
 

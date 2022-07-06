@@ -13,7 +13,30 @@ import { Navigate } from 'react-router-dom'
 import { logout } from '../actions/authActions';
 import { buttonReset} from '../actions/uiActions';
 
+
+import SongTable from './SongTable';
+
 export class Profile extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      volume: 1.0,
+      isPlaying: false,
+      songIndex: 0,
+      songDuration: 0,
+      songCurrTime: 0,
+      songProgress: 0.0,
+      activeArtistName: "None selected",
+      activeArtist: "None selected",
+      activeSongName: "None selected",
+      artistName: "",
+      artistURL: "",
+      ytId: ""
+    }
+    this.ytPlayer = React.createRef();
+    this.controlBar = React.createRef();
+}
 
   static propTypes = {
     button: PropTypes.bool,
@@ -29,9 +52,49 @@ export class Profile extends Component {
     this.props.logout();
   };
 
+  render2() {
+    if(!this.props.authState.isAuthenticated) {
+      return <Navigate exact to="/login" />
+    }
+
+    const {user} = this.props.authState;
+
+    return (
+      <div className="container-fluid" id="main-music-app">
+         
+      <div className="row" >
+          <div className="row" >
+              <div className="col-sm-6">
+              <Card>
+            <CardBody>
+          <CardTitle><h1>{ user ? `Welcome, ${user.name} ${this.props.authState.isAuthenticated}`: ''} <span role="img" aria-label="party-popper">🎉 </span> </h1></CardTitle>
+          <br/>
+           <CardSubtitle><h5> You are now Logged In <span role="img" aria-label="clap">👏 </span></h5></CardSubtitle>
+          <br/>
+        <Button size="lg" onClick={this.onLogout} color="primary">Logout</Button>
+            </CardBody>
+          </Card>
+              </div>
+          </div>
+
+          <div className="col-sm-6">
+            <SongTable songs={this.state.artistTopSongs} callbackHandler={this.callbackHandler}></SongTable>
+          </div>
+          <div className="col-sm-6">
+          
+          <p >
+          {this.state.artistBio + " "} 
+          <a href={this.state.artistURL}>LastFM Link</a>
+          </p>
+          </div>
+      </div>
+  </div>
+    )
+  }
+
   render() {
     if(!this.props.authState.isAuthenticated) {
-    //return <Navigate exact to="/" />
+      return <Navigate exact to="/" />
     }
 
     const {user} = this.props.authState;

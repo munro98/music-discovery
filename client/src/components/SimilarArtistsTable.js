@@ -32,7 +32,7 @@ class SimilarArtistsTable extends Component {
             <tr key={i}>
                 <td><img height="40px" src={val.image[val.image.length-1][Object.keys(val.image[val.image.length-1])[0]]} alt="artist" /></td>
                 <td><a href={
-                    "?artist="+val.url.split("/")[val.url.split("/").length-1]
+                    "/music/?artist="+val.url.split("/")[val.url.split("/").length-1]
                     }>{val.name}</a></td>
             </tr>
 

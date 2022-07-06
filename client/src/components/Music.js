@@ -34,6 +34,16 @@ import {
     SimilarArtistsTable_CB_ENUMS,
 } from './SimilarArtistsTable';
 
+/*
+
+Fix Search for artists
+Change similar artists table to buttons and use redux to update music comp selected artist
+
+Connect control bar to Music component
+
+Show favourited songs on profile page
+*/
+
 export class Music extends Component {
 
     constructor(props) {
@@ -55,8 +65,7 @@ export class Music extends Component {
           artistImage: "",
           artistSimilar: [],
           artistTopSongs: [],
-          suggestions: [],
-          ytId: "71rSc6LXlSo"
+          ytId: ""
         }
         this.ytPlayer = React.createRef();
         this.controlBar = React.createRef();
@@ -64,10 +73,6 @@ export class Music extends Component {
 
         //this.onPlayDown = this.onPlayDown.bind(this);
         //this.loadAnother = this.loadAnother.bind(this);
-        this.onSearchChange = this.onSearchChange.bind(this);
-        this.searchArtist = this.searchArtist.bind(this);
-        this.closeAllLists = this.closeAllLists.bind(this);
-        this.addActive = this.addActive.bind(this)
     }
 
   static propTypes = {
@@ -85,6 +90,8 @@ export class Music extends Component {
   };
 
   componentDidMount() {
+    document.getElementById("main-music-app").addEventListener('build', function (e) { console.log(e)/* ... */ }, false);
+
     const parsed = QueryString.parse(window.location.search);
     console.log(parsed);
 
@@ -120,6 +127,7 @@ export class Music extends Component {
           console.log(data);
           let top = data.toptracks.track;
           this.setState({artistTopSongs: top});
+          //let vID = this.getVID(data.toptracks.track[0].name);
         }).catch(err => {
           this.setState({artistName: "Request Error"});
           console.log('The request failed!!!! ' + err); 
@@ -127,7 +135,7 @@ export class Music extends Component {
   }
 
   callbackHandler = (type, data) => {
-    //console.log("callbackHandler " + type)
+    console.log("callbackHandler " + type)
     switch(type) {
       case SONG_TABLE_CB_ENUMS.PLAY:
       console.log("play " + data.songName)
@@ -215,6 +223,27 @@ export class Music extends Component {
     }
   }
 
+  getVID(songName) {
+    let imeBenda = this.state.artistName.replace(/&/g, '%26');
+    let imePesme = songName.replace(/&/g, '%26');
+    // https://developers.google.com/youtube/v3/docs/search
+    let url = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q="
+			  + imeBenda + "+" + imePesme + "&type=video&videoDefinition=any&videoEmbeddable=true&key=" + this.props.youtube_api;
+    fetch(url).then(response => {
+        return response.json();
+      }).then(data => {
+        console.log(data);
+        let vID = data.items[0].id.videoId;
+        console.log(vID);
+
+        return vID;
+      }).catch(err => {
+        this.setState({artistName: "YT Request Error"});
+        console.log('The request failed!!!! ' + err); 
+      });
+
+  }
+
   onPlayFromTable(songName) {
     let imeBenda = this.state.artistName.replace(/&/g, '%26');
     let imePesme = songName.replace(/&/g, '%26');
@@ -228,7 +257,7 @@ export class Music extends Component {
         let vID = data.items[0].id.videoId;
         console.log(vID);
 
-        this.ytPlayer.current.playNewVideo(vID)
+        this.ytPlayer.current.loadNewVideo(vID)
 
         if (true) {
           this.setState({activeArtistName: this.state.artistName, activeSongName: songName});
@@ -242,83 +271,6 @@ export class Music extends Component {
 
   }
   
-  searchArtist(str) {
-    let imePesme = str.replace(/&/g, '%26');
-    let url = "http://ws.audioscrobbler.com/2.0/?method=artist.search&artist=" + imePesme + "&api_key=" + this.props.lastfm_api + "&limit=20&format=json"
-
-    let suggestions = [];
-    fetch(url).then(response => {
-        return response.json();
-      }).then(data => {
-        console.log(data);
-        ///*
-        data.results.artistmatches.artist.forEach((artist) => {suggestions.push(artist.name)})
-        this.setState({suggestions: suggestions});
-        //*/
-      }).catch(err => {
-        console.log('The request failed!!!! ' + err); 
-      });
-  }
-
-  onSearchChange(e) {
-    console.log(e.currentTarget.value);// e.g koan sound
-    this.searchArtist(e.currentTarget.value);
-
-    let a, b, i, val = e.currentTarget.value.toLowerCase();
-    let inputEl = e.currentTarget;
-    let self = this;
-      /*close any already open lists of autocompleted values*/
-      this.closeAllLists();
-      if (!val) { return false;}
-      this.currentFocus = -1;
-
-      a = document.createElement("DIV");
-      a.setAttribute("id", "autocomplete-list");
-      a.setAttribute("class", "autocomplete-items");
-      e.currentTarget.parentNode.appendChild(a);
-      for (i = 0; i < this.state.suggestions.length; i++) {
-        if (this.state.suggestions[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-
-          b = document.createElement("DIV");
-
-          b.innerHTML = "<strong>" + this.state.suggestions[i].substr(0, val.length) + "</strong>";
-          b.innerHTML += this.state.suggestions[i].substr(val.length);
-
-          b.innerHTML += "<input type='hidden' value='" + this.state.suggestions[i] + "'>";
-
-              b.addEventListener("click", function(e) {
-                inputEl.value = this.getElementsByTagName("input")[0].value;
-              /*close the list of autocompleted values,*/
-              self.closeAllLists();
-          });
-          a.appendChild(b);
-        }
-      }
-
-  }
-
-  addActive(x) {
-    if (!x) return false;
-    this.removeActive(x);
-    if (this.currentFocus >= x.length) this.currentFocus = 0;
-    if (this.currentFocus < 0) this.currentFocus = (x.length - 1);
-    x[this.currentFocus].classList.add("autocomplete-active");
-  }
-  removeActive(x) {
-    for (var i = 0; i < x.length; i++) {
-      x[i].classList.remove("autocomplete-active");
-    }
-  }
-
-  closeAllLists(elmnt) {
-    var x = document.getElementsByClassName("autocomplete-items");
-    for (var i = 0; i < x.length; i++) {
-      if (elmnt != x[i] && elmnt != document.getElementById("search")) {
-      x[i].parentNode.removeChild(x[i]);
-    }
-  }
-  }
-
   render() {
     const {user} = this.props.authState;
 
@@ -330,7 +282,8 @@ export class Music extends Component {
     }
     
     return (
-       <div className="container-fluid">
+       <div className="container-fluid" id="main-music-app">
+         
         <div className="row" >
             <div className="row" >
                 <div className="col-sm-6">
@@ -362,6 +315,8 @@ export class Music extends Component {
     )
   }
 }
+
+
 const mapStateToProps = (state) => ({ //Maps state to redux store as props
   button: state.ui.button,
   authState: state.auth

@@ -26,9 +26,18 @@ color:'white'
 
 export class HomePage extends Component {
 
+  constructor(props) {
+    super(props);
+
+    this.musicComp = React.createRef();
+    this.controlBar = React.createRef();
+  }
+
   componentDidMount() {
     // Check if session cookie is present
     store.dispatch(isAuth());
+
+
   }
 
   static propTypes = {
@@ -43,9 +52,8 @@ export class HomePage extends Component {
 
     return (
       <body>
-        
+        <NavBar lastfm_api={this.props.lastfm_api} ></NavBar>
        <div className="container" style={{paddingTop: "60px", paddingBottom: "60px"}}>
-         
         <div className="main">
 
             <Routes>
@@ -54,13 +62,13 @@ export class HomePage extends Component {
               <Route exact path ="/login" element={<Login></Login>}/>
               <Route exact path ="/register" element={<Register></Register>}/>
               <Route exact path ="/secret" element={<Secret></Secret>}/>
-              <Route exact path ="/music" element={<Music youtube_api={this.props.youtube_api} lastfm_api={this.props.lastfm_api}></Music>}/>
+              <Route exact path ="/music" ref={this.musicComp} controlBar={this.controlBar} element={<Music youtube_api={this.props.youtube_api} lastfm_api={this.props.lastfm_api}></Music>}/>
             </Routes>
         </div>
         <br></br>
         <br></br>
     </div>
-    <ControlBar2></ControlBar2>
+    <ControlBar2 ref={this.controlBar}></ControlBar2>
       </body>
     )
   }
