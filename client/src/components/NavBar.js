@@ -124,7 +124,10 @@ export class NavBar extends Component {
     e.preventDefault();
 
     console.log("Searching " + this.searchInput);
-    this.props.changeArtist(this.searchInput);
+    if (this.searchInput.length > 0) {
+      this.props.changeArtist(this.searchInput);
+    }
+    
     //this.props.login(user);
   };
 
@@ -156,7 +159,7 @@ export class NavBar extends Component {
 
   render() {
     return (
-       <div className="navbar-static-top navbar-expand-lg navbar-light bg-light">
+       <div className="navbar-static-top navbar-expand-lg navbar-light" style={{backgroundColor: "rgb(160, 160, 160)", padding: "8px"}}>
         <a className="navbar-brand" href="#">Music Discovery</a>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>

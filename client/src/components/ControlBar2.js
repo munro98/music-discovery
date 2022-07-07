@@ -52,6 +52,8 @@ class ControlBar2 extends Component {
 
         this.updateProgress = this.updateProgress.bind(this);
 
+        this.onClickArtist = this.onClickArtist.bind(this);
+
         this.slider = React.createRef();
         this.sliderVol = React.createRef();
     }
@@ -115,6 +117,12 @@ class ControlBar2 extends Component {
     updateProgress(f) {
         this.slider.current.setFactor(f);
     }
+
+    onClickArtist() {
+        console.log("ControlBar.onClickArtist:");
+        //this.props.changeArtist(this.props.music.playingArtist);
+    }
+
     render() {
 
         
@@ -126,7 +134,7 @@ class ControlBar2 extends Component {
         // )
         
         return (
-            <footer id="sticky-footer" className="fixed-bottom footer mt-auto py-3 bg-dark">
+            <footer id="sticky-footer" className="fixed-bottom footer mt-auto py-1" style={{backgroundColor: "rgb(80, 80, 80)"}}>
                 <div style={{}} >
             <div>
             
@@ -134,12 +142,10 @@ class ControlBar2 extends Component {
             <Slider ref={this.slider} onChange={this.onSongSeekChange}></Slider>
             
 
-            <div style={{float : "left", margin: "16px", color: "rgb(240, 240, 240)"}}>
-            <span > <a style={{color: "rgb(200, 200, 200)"}} href={
-                    this.props.activeArtist === "" ? "/" : "?artist="+this.props.activeArtist
-                    }> {"Artist: " + this.props.activeArtistName} </a> </span>
+            <div style={{float : "left", margin: "12px", color: "rgb(240, 240, 240)"}}>
+            <span > <button style={{color: "rgb(200, 200, 200)"}} onClick={this.onClickArtist}> {"Artist: " + this.props.music.playingArtist} </button> </span>
             <br></br>
-            <span style={{color: "rgb(240, 240, 240)"}}>{this.props.activeSongName}</span>
+            <span style={{color: "rgb(240, 240, 240)"}}>{this.props.music.playingSong}</span>
             
             
             </div>
@@ -188,8 +194,8 @@ class ControlBar2 extends Component {
 const mapStateToProps = (state) => ({ //Maps state element in redux store to props
     authState: state.auth,
     status: state.status,
-    loading: state.ui.loading
-
+    loading: state.ui.loading,
+    music: state.music
   });
 
 const mapDispatchToProps = dispatch => {

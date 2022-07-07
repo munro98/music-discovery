@@ -10,7 +10,7 @@ import {
 import PropTypes from "prop-types";
 import { Navigate } from 'react-router-dom'
 import { logout } from '../actions/authActions';
-import { buttonReset, changeControlBarText} from '../actions/uiActions';
+import { buttonReset, setPlayingSong} from '../actions/uiActions';
 import {CHANGE_ARTIST} from '../reducers/musicReducer';
 
 import QueryString from 'query-string';
@@ -63,7 +63,7 @@ export class Music extends Component {
           artistImage: "",
           artistSimilar: [],
           artistTopSongs: [],
-          ytId: ""
+          ytId: "",
         }
         this.ytPlayer = React.createRef();
         this.controlBar = React.createRef();
@@ -126,7 +126,7 @@ export class Music extends Component {
         let image = data.artist.image;//[data.artist.image.length-1];
         let url = data.artist.url;
         let similar = data.artist.similar.artist;
-        this.setState({artistName: name, artistURL: url, artistBio: bio, artistTags: tags, artistImage: image, artistSimilar: similar});
+        this.setState({artistName: name, artistURL: url, artistBio: bio, artistTags: tags, artistSimilar: similar});
       }).catch(err => {
         this.setState({artistName: "Request Error"});
         console.log('The request failed!!!! ' + err); 
@@ -145,6 +145,23 @@ export class Music extends Component {
           this.setState({artistName: "Request Error"});
           console.log('The request failed!!!! ' + err); 
         });
+
+        let urlRecentSongs = "http://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=" + imePesme + "&api_key=" + this.props.lastfm_api + "&limit=20&format=json"
+      fetch(urlRecentSongs).then(response => {
+          return response.json();
+        }).then(data => {
+          console.log("RecentTracks");
+          console.log(data);
+          let imgLen = data.topalbums.album[0].image.length;
+          let imgageSrc = data.topalbums.album[0].image[imgLen-1]; //.image[val.image.length-1][Object.keys(val.image[val.image.length-1])[0]];
+          this.setState({artistImage: imgageSrc["#text"]});
+          //console.log(imgageSrc["#text"]);
+          //let vID = this.getVID(data.toptracks.track[0].name);
+        }).catch(err => {
+          console.log('The request failed!!!! ' + err); 
+        });
+
+
   }
 
   callbackHandler = (type, data) => {
@@ -152,6 +169,7 @@ export class Music extends Component {
     switch(type) {
       case SONG_TABLE_CB_ENUMS.PLAY:
       console.log("play " + data.songName)
+      this.props.setPlayingSong(data.songName);
 
       this.setState({songIndex : data.songId});
       this.onPlayFromTable(data.songName);
@@ -161,9 +179,15 @@ export class Music extends Component {
       //this.ytPlayer.current.playVideo();
       //this.props.callbackHandler(type, data);
       //console.log("play " + data)
+      this.props.setPlayingSong(this.state.artistTopSongs[this.state.songIndex].name);
       if (this.state.songIndex <= this.state.artistTopSongs.length) {
         this.onPlayFromTable(this.state.artistTopSongs[this.state.songIndex].name);
       }
+      
+
+      //this.props.setCurrentPlaylist(this.state.artistTopSongs);
+
+
       //this.onPlayDown();
       break;
       case ControlBar_CB_ENUMS.PREV:
@@ -301,10 +325,14 @@ export class Music extends Component {
             <div className="row" >
                 <div className="col-sm-6">
                     <EmbededYoutube ref={this.ytPlayer} YTid={this.state.ytId} callbackHandler={this.callbackHandler}> </EmbededYoutube>
-                    <h2> {this.props.music.selectedArtist} </h2>
-                    <p>
-                    Genres: {tags}
-                    </p>
+                    <img src={this.state.artistImage} width="160px" style={{float: "right"}}></img>
+                    <div>
+                      <h2> {this.props.music.selectedArtist} </h2>
+                      <p>
+                      Genres: {tags}
+                      </p>
+                    </div>
+                    
                     <br></br>
                 </div>
             </div>
@@ -312,6 +340,8 @@ export class Music extends Component {
           
             <div className="col-sm-6">
               <SongTable songs={this.state.artistTopSongs} callbackHandler={this.callbackHandler}></SongTable>
+              <br></br>
+              <br></br>
             </div>
             <div className="col-sm-6">
             
@@ -344,4 +374,4 @@ const changeArtist = ( artistName) => (dispatch) => {
   });
 };
 
-export default connect(mapStateToProps, { logout, buttonReset, changeArtist, changeControlBarText })(Music);
+export default connect(mapStateToProps, { logout, buttonReset, changeArtist, setPlayingSong })(Music);

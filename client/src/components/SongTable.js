@@ -61,7 +61,7 @@ class SongTable extends Component {
         return (
             <div style={divStyle}>
             <h5>Top Songs</h5>
-            <table id="songs">
+            <table id="songs" style={{width: "100%"}}>
                 <tbody>
                 <tr>
                     <th></th>
