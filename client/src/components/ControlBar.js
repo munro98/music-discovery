@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from "react-redux";
+import { playPressed } from "../actions/uiActions";
+import{useSelector, useDispatch} from "react-redux"
 
 import Slider from './Slider';
 
@@ -16,25 +19,6 @@ const VIEW_CALLBACK_ENUMS = {
     UPDATE_PROGRESS: 'ControlBar/UPDATE_PROGRESS'
   };
 
-const styleFlex = {display: "flex",
-    height: "100%",
-    backgroundColor: "rgb(39, 39, 39)",
-};
-
-const styleDiv = {
-    //backgroundColor: "rgb(39, 39, 39)",
-    //background: "transparent",
-    width : "100%",
-    //margin: "10px",
-    //padding: "20px",
-};
-
-const styleDiv2 = {
-    //backgroundColor: "rgb(39, 39, 39)",
-    background: "transparent",
-    flex : "70%",
-    width : "100%",
-};
 
 const timeElapsedSyle = {
     fontFamily: "monospace, monospace",
@@ -42,7 +26,18 @@ const timeElapsedSyle = {
 
 const stylePlayerButton = {width: "40px", height: "40px", background: "transparent", border: "0", outline: "none"}
 
+const footerStyle = {
+    position: "absolute",
+    bottom: "0",
+    width: "100%",
+    height: "60px", /* Set the fixed height of the footer here */
+    lineHeight: "60px", /* Vertically center the text there */
+    backgroundColor: "#f5f5f5"
+  }
+
+  
 class ControlBar extends Component {
+
     constructor(props) {
         super(props)
 
@@ -57,9 +52,10 @@ class ControlBar extends Component {
 
         this.updateProgress = this.updateProgress.bind(this);
 
+        this.onClickArtist = this.onClickArtist.bind(this);
+
         this.slider = React.createRef();
         this.sliderVol = React.createRef();
-
     }
 
     onSongEnded() {
@@ -93,21 +89,19 @@ class ControlBar extends Component {
     }
 
     onPlayDown(e) {
-        this.props.callbackHandler(
-            VIEW_CALLBACK_ENUMS.PLAY,
-            "");
+        let event = new CustomEvent('build', { detail: "PLAY" });
+        document.getElementById("main-music-app").dispatchEvent(event);
+        
     }
 
     onPrevDown(e) {
-        this.props.callbackHandler(
-            VIEW_CALLBACK_ENUMS.PREV,
-            "");
+        let event = new CustomEvent('build', { detail: "PREV" });
+        document.getElementById("main-music-app").dispatchEvent(event);
     }
 
     onNextDown(e) {
-        this.props.callbackHandler(
-            VIEW_CALLBACK_ENUMS.NEXT,
-            "");
+        let event = new CustomEvent('build', { detail: "NEXT" });
+        document.getElementById("main-music-app").dispatchEvent(event);
     }
 
     secondsToMMSS(s) {
@@ -121,38 +115,42 @@ class ControlBar extends Component {
         this.slider.current.setFactor(f);
     }
 
-    /*
-            <img 
-            style={albumStyle}
-            src="albumPlaceHolder.jpg" 
-            alt="Album Art"
-            height="100px"
-            width="100px" />
-    */
+    onClickArtist() {
+        console.log("ControlBar.onClickArtist:");
+        //this.props.changeArtist(this.props.music.playingArtist);
+    }
 
     render() {
+
+        
+        // return (
+        //     <footer  className="fixed-bottom flex-shrink-0 py-4 bg-dark text-white-50">
+               
+        //     <div>Hello</div>
+        //     </footer>
+        // )
+        
         return (
-            <div style={styleFlex}  className="flex-container">
-            <div style={styleDiv2} >
+            <footer id="sticky-footer" className="fixed-bottom footer mt-auto py-1" style={{backgroundColor: "rgb(80, 80, 80)"}}>
+                <div style={{}} >
             <div>
             
-            <div style={{float: "left", width : "100px", margin: "0px"}}>
             
+            <Slider ref={this.slider} onChange={this.onSongSeekChange}></Slider>
+            
+
+            <div style={{float : "left", margin: "12px", color: "rgb(240, 240, 240)"}}>
+            <span > <button style={{color: "rgb(200, 200, 200)"}} onClick={this.onClickArtist}> {"Artist: " + this.props.music.playingArtist} </button> </span>
+            <br></br>
+            <span style={{color: "rgb(240, 240, 240)"}}>{this.props.music.playingSong}</span>
+            
+            
+            </div>
+            </div>
             </div>
 
-            <div style={{float : "left", margin: "16px", color: "rgb(240, 240, 240)"}}>
-            <span > <a style={{color: "rgb(200, 200, 200)"}} href={
-                    this.props.activeArtist === "" ? "/" : "?artist="+this.props.activeArtist
-                    }> {this.props.activeArtistName} </a> </span>
-            <br></br>
-            <span style={{color: "rgb(240, 240, 240)"}}>{this.props.activeSongName}</span>
-            
-            
-            </div>
-            </div>
-            </div>
-            <div style={styleDiv}> 
-                <div style={{ width: "240px",height: "50px",marginTop: "16px", marginLeft: "auto", marginRight: "auto", columnCount: 5/*, backgroundColor: "rgb(255, 0, 0)"*/}}> 
+            <div style={{}}> 
+                <div style={{ width: "240px",height: "50px",marginTop: "4px", marginLeft: "auto", marginRight: "auto", columnCount: 5/*, backgroundColor: "rgb(255, 0, 0)"*/}}> 
                     <div><center>
                     
                         <button id="play-button" style={stylePlayerButton} onClick={this.onPrevDown}>
@@ -184,31 +182,29 @@ class ControlBar extends Component {
                         
                     </center></div>
                 </div>
-            
                 
-                <div style={{ height: "50px", marginTop: "0px", marginLeft: "auto", marginRight: "auto"/*, backgroundColor: "rgb(255, 0, 0)"*/}}> 
-                    <div style={{ marginTop: "2px", width: "44px", float: "left", fontFamily: "monospace, monospace", background: "transparent"}}>{this.secondsToMMSS(this.props.time)}</div>
-                    <div style={{ marginTop: "2px", width: "44px", float: "right", fontFamily: "monospace, monospace", background: "transparent"}}>{this.secondsToMMSS(this.props.duration)}</div>
-                    <div style={{marginLeft: "48px", marginRight: "50px"}}><Slider ref={this.slider} onChange={this.onSongSeekChange}></Slider></div>
                 </div>
-
-
-                </div>
-            <div style={styleDiv2}>
-                <div style={{width: "140px",height: "50px",float: "right"}}>
-                    <div style={{ width: "140px",height: "50px", float: "right", marginTop: "16px", marginRight: "16px", columnCount: 3/*, backgroundColor: "rgb(255, 0, 0)"*/}}> 
-                    </div>
-                    <div style={{ width: "140px",marginTop: "0px", marginRight: "16px", float: "right"}}>
-                    <Slider ref={this.sliderVol} onChange={this.onVolumeChange}></Slider>
-                    </div>
-                </div>
-            </div>
-          </div>
+          </footer>
         )
     }
 }
+const mapStateToProps = (state) => ({ //Maps state element in redux store to props
+    authState: state.auth,
+    status: state.status,
+    loading: state.ui.loading,
+    music: state.music
+  });
 
-export default ControlBar
+const mapDispatchToProps = dispatch => {
+    return {
+        playPressed: id => {
+        dispatch(playPressed())
+      }
+    }
+  }
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(ControlBar)
 
 export {
     VIEW_CALLBACK_ENUMS as ControlBar_CB_ENUMS,

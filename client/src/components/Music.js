@@ -90,7 +90,21 @@ export class Music extends Component {
   };
 
   componentDidMount() {
-    document.getElementById("main-music-app").addEventListener('build', function (e) { console.log(e)/* ... */ }, false);
+    let self = this;
+    document.getElementById("main-music-app").addEventListener('build', function (e) { 
+      console.log(e)
+
+      if (e.detail == "PLAY") {
+        self.ytPlayer.current.playVideo();
+      } else if (e.detail == "NEXT") {
+
+      } else if (e.detail == "PREV") {
+
+      }
+      
+  
+  
+  }, false);
 
     const urlParams = new URLSearchParams(window.location.search);
     console.log("Url params " + urlParams);

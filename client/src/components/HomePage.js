@@ -18,7 +18,7 @@ import Profile from './Profile';
 import Home from './Home';
 import Music from './Music';
 import NavBar from './NavBar';
-import ControlBar2 from './ControlBar2';
+import ControlBar from './ControlBar';
 
 var divStyle = {
 color:'white'
@@ -68,7 +68,7 @@ export class HomePage extends Component {
         <br></br>
         <br></br>
     </div>
-    <ControlBar2 ref={this.controlBar}></ControlBar2>
+    <ControlBar ref={this.controlBar}></ControlBar>
       </body>
     )
   }
