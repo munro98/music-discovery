@@ -10,7 +10,7 @@ import {
 import PropTypes from "prop-types";
 import { Navigate } from 'react-router-dom'
 import { logout } from '../actions/authActions';
-import { buttonReset, setPlayingSong} from '../actions/uiActions';
+import { buttonReset, setPlayingSong, setCurrentPlaylist} from '../actions/uiActions';
 import {CHANGE_ARTIST} from '../reducers/musicReducer';
 
 import QueryString from 'query-string';
@@ -33,13 +33,12 @@ import {
 import SimilarArtistsTable from './SimilarArtistsTable';
 
 /*
-
-Fix Search for artists
-Change similar artists table to buttons and use redux to update music comp selected artist
-
-Connect control bar to Music component
-
+Fix Search bar autofill suggestions hanging around 
 Show favourited songs on profile page
+
+store favourited songs
+display filled heart next to songs that are favourited and empty heat if not
+
 */
 
 export class Music extends Component {
@@ -53,8 +52,6 @@ export class Music extends Component {
           songDuration: 0,
           songCurrTime: 0,
           songProgress: 0.0,
-          activeArtistName: "None selected",
-          activeArtist: "None selected",
           activeSongName: "None selected",
           artistName: "",
           artistBio: "",
@@ -82,7 +79,6 @@ export class Music extends Component {
     logout: PropTypes.func.isRequired,
   };
 
-
   onLogout = (e) => {
     e.preventDefault();
     this.props.buttonReset();
@@ -96,14 +92,32 @@ export class Music extends Component {
 
       if (e.detail == "PLAY") {
         self.ytPlayer.current.playVideo();
+
       } else if (e.detail == "NEXT") {
+        if (this.props.music.currentIndex+1 < this.props.music.currentPlaylist.length) {
+          // TODO: play next song
+          //this.props.skipNext()
+          //let ind = this.props.music.currentIndex
+          //this.onPlayFromTable(this.props.music.playingArtist, this.props.music.currentPlaylist[ind]);
+        }
 
       } else if (e.detail == "PREV") {
+        if (this.props.music.currentIndex-1 >= 0) {
+          // TODO: play next song
+          //this.props.skipPrev()
+          //let ind = this.props.music.currentIndex
+          //this.onPlayFromTable(this.props.music.playingArtist, this.props.music.currentPlaylist[ind]);
+        }
 
+      } else if (e.detail == "YT_SONG_END") {
+        if (this.props.music.currentIndex+1 < this.props.music.currentPlaylist.length) {
+          // TODO: play next song
+          //this.props.skipNext()
+          //let ind = this.props.music.currentIndex
+          //this.onPlayFromTable(this.props.music.playingArtist, this.props.music.currentPlaylist[ind]);
+        }
+        
       }
-      
-  
-  
   }, false);
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -113,8 +127,6 @@ export class Music extends Component {
       artistParam = urlParams.get("artist");
       this.props.changeArtist(artistParam);
     }
-    
-
     this.updateContent();
   }
 
@@ -184,6 +196,7 @@ export class Music extends Component {
       case SONG_TABLE_CB_ENUMS.PLAY:
       console.log("play " + data.songName)
       this.props.setPlayingSong(data.songName);
+      //this.props.setCurrentPlaylist(this.state.artistTopSongs); TODO
 
       this.setState({songIndex : data.songId});
       this.onPlayFromTable(data.songName);
@@ -198,11 +211,6 @@ export class Music extends Component {
         this.onPlayFromTable(this.state.artistTopSongs[this.state.songIndex].name);
       }
       
-
-      //this.props.setCurrentPlaylist(this.state.artistTopSongs);
-
-
-      //this.onPlayDown();
       break;
       case ControlBar_CB_ENUMS.PREV:
       if (this.state.songIndex > 1) {
@@ -251,23 +259,6 @@ export class Music extends Component {
         this.setState({songCurrTime: data.time});
         //this.controlBar.current.updateProgress(data.time / this.state.songDuration); // TODO: Add progress slider
       break;
-      /* Unused
-      case CALLBACK_ENUMS.PLAY:
-      // manipulate data if required
-      //this.props.callbackHandler(type, data);
-      console.log("play " + data)
-      this.onPlayDown();
-      break;
-    case CALLBACK_ENUMS.PREV:
-      this.onPrevDown();
-      break;
-    case CALLBACK_ENUMS.NEXT:
-      this.onNextDown();
-      break;
-    case CALLBACK_ENUMS.END:
-      this.onSongEnded();
-      break;
-    */
     default:
       // bubble up all other actions to parent
       //this.props.callbackHandler(type, data);
@@ -307,24 +298,16 @@ export class Music extends Component {
         console.log(data);
         let vID = data.items[0].id.videoId;
         console.log(vID);
-
         this.ytPlayer.current.loadNewVideo(vID)
-
-        if (true) {
-          this.setState({activeArtistName: this.props.music.selectedArtist, activeSongName: songName});
-        }
-        //this.setState({ytId: vID});
-        //this.setState({artistTopSongs: top});
+       
       }).catch(err => {
         this.setState({artistName: "YT Request Error"});
         console.log('The request failed!!!! ' + err); 
       });
-
   }
   
   render() {
     const {user} = this.props.authState;
-
     let tags = this.state.artistTags.map( (val, i) => 
       <span>{val.name + ", "}</span>
     );
@@ -388,4 +371,4 @@ const changeArtist = ( artistName) => (dispatch) => {
   });
 };
 
-export default connect(mapStateToProps, { logout, buttonReset, changeArtist, setPlayingSong })(Music);
+export default connect(mapStateToProps, { logout, buttonReset, changeArtist, setPlayingSong, setCurrentPlaylist })(Music);

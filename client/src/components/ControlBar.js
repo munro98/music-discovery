@@ -91,7 +91,6 @@ class ControlBar extends Component {
     onPlayDown(e) {
         let event = new CustomEvent('build', { detail: "PLAY" });
         document.getElementById("main-music-app").dispatchEvent(event);
-        
     }
 
     onPrevDown(e) {
@@ -140,7 +139,7 @@ class ControlBar extends Component {
             
 
             <div style={{float : "left", margin: "12px", color: "rgb(240, 240, 240)"}}>
-            <span > <button style={{color: "rgb(200, 200, 200)"}} onClick={this.onClickArtist}> {"Artist: " + this.props.music.playingArtist} </button> </span>
+            <span > <button class="btn btn-link" style={{color: "rgb(200, 200, 200)"}} onClick={this.onClickArtist}> {"Artist: " + this.props.music.playingArtist} </button> </span>
             <br></br>
             <span style={{color: "rgb(240, 240, 240)"}}>{this.props.music.playingSong}</span>
             

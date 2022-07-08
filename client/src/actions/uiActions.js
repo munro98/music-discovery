@@ -5,7 +5,7 @@ import {
   PLAY_PRESSED
 } from "./types";
 
-import { SET_PLAYING_SONG } from "../reducers/musicReducer";
+import { SET_PLAYING_SONG, SET_CURRENT_PLAYLIST } from "../reducers/musicReducer";
 
 export const buttonClicked = () => (dispatch, getState) => {
   dispatch({type: BUTTON_CLICKED});
@@ -29,6 +29,10 @@ export const setPlayingSong = value => ({
   payload: value
 });
 
+export const setCurrentPlaylist = value => ({
+  type: SET_CURRENT_PLAYLIST,
+  payload: value
+});
 
 
 export const selectArtist = (id, artist) => ({

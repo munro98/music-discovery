@@ -32,19 +32,20 @@ class SimilarArtistsTable extends Component {
         let items = list.map( (val, i) =>
             <tr key={i}>
                 <td><img height="40px" src={val.image[val.image.length-1][Object.keys(val.image[val.image.length-1])[0]]} alt="artist" /></td>
-                <td><button ind={i} onClick={this.onClickArtist}>{val.name}</button></td>
+                <td><button class="btn btn-link" ind={i} onClick={this.onClickArtist}>{val.name}</button></td>
             </tr>
 
         );
         //<div class="d-flex justify-content-center">
         return (
-            <div className="d-flex">
+            <div className="">
+            <h5>Similar Artists</h5>
             <table id="songs">
                 <col width="66"></col>
                 <tbody>
                 <tr>
                     <th></th>
-                    <th>Similar Artists</th>
+                    <th></th>
                 </tr>
                 {items}
                 </tbody>
