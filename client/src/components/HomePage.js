@@ -51,8 +51,10 @@ export class HomePage extends Component {
     // }<NavBar></NavBar>
 
     return (
-      <body>
+      <div>
         <NavBar lastfm_api={this.props.lastfm_api} ></NavBar>
+      <body>
+        
        <div className="container" style={{paddingTop: "60px", paddingBottom: "60px"}}>
         <div className="main">
 
@@ -70,6 +72,7 @@ export class HomePage extends Component {
     </div>
     <ControlBar ref={this.controlBar}></ControlBar>
       </body>
+      </div>
     )
   }
 }

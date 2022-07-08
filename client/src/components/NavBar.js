@@ -3,8 +3,17 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { Route, Routes, Link } from 'react-router-dom'
 import {
-  Button,
-} from "reactstrap";
+  Collapse,
+  Navbar,
+  NavbarToggler,
+  NavbarBrand,
+  Nav,
+  NavItem,
+  NavLink,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem } from 'reactstrap';
 import PropTypes from "prop-types";
 import { buttonClicked } from "../actions/uiActions";
 import './style.css';
@@ -17,6 +26,7 @@ import Login from './Login';
 import Register from './Register';
 
 import './appstyles.css';
+import $ from 'jquery';
 
 export class NavBar extends Component {
 
@@ -26,6 +36,7 @@ export class NavBar extends Component {
     this.state = {
       artistName: "",
       suggestions: [],
+      isOpen: false
     }
 
     this.searchInput = "";
@@ -35,6 +46,7 @@ export class NavBar extends Component {
     this.searchArtist = this.searchArtist.bind(this);
     this.closeAllLists = this.closeAllLists.bind(this);
     this.addActive = this.addActive.bind(this);
+    this.toggle = this.toggle.bind(this);
   }
 
 
@@ -131,6 +143,12 @@ export class NavBar extends Component {
     //this.props.login(user);
   };
 
+  toggle() {
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
+  }
+
   onComponentDidUpdate() {
     console.log(this.props.music.selectedArtist)
   }
@@ -159,45 +177,43 @@ export class NavBar extends Component {
 
   render() {
     return (
-       <div className="navbar-static-top navbar-expand-lg navbar-light" style={{backgroundColor: "rgb(160, 160, 160)", padding: "8px"}}>
-        <a className="navbar-brand" href="#">Music Discovery</a>
-        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav">
-            <li className="nav-item active">
+      <div>
+        <Navbar color="light" light expand="md">
+          <NavbarBrand href="/">Music Discovery</NavbarBrand>
+          <NavbarToggler onClick={this.toggle} />
+          <Collapse isOpen={this.state.isOpen} navbar>
+            <Nav className="ml-auto" navbar>
+              <NavItem>
                 <Link className="nav-link" exact to="/">Home </Link>
-            </li>
-
-            <li className="nav-item active">
+              </NavItem>
+              <NavItem>
                 <Link className="nav-link" exact to="/music">Music </Link>
-            </li>
-
-            {this.props.authState.isAuthenticated ? (
-                <li className="nav-item">
-                    <Link className="nav-link" exact to="/logout">Logout </Link>
-                </li>
+              </NavItem>
+              {this.props.authState.isAuthenticated ? (
+                <NavItem>
+                < Link className="nav-link" exact to="/logout">Logout </Link>
+                </NavItem>
             ):
-                <li className="nav-item">
-                    <Link className="nav-link" exact to="/login">Login </Link>
-                </li>
+                <NavItem>
+                  <Link className="nav-link" exact to="/login">Login </Link>
+                </NavItem>
             }
-            <li className="nav-item">
+              <NavItem>
                 <Link className="nav-link" exact to="/profile">Profile </Link>
-            </li>
-            <li className="nav-item">
-            <form autoComplete="off" onSubmit={this.onSubmit}>
-          <div style={{float: "right", marginTop: "auto", marginBottom: "auto", marginLeft: "16px", marginRight: "16px"}} class="autocomplete">
-            <input style={{border: "none",fontSize: "17px", padding: "6px", marginTop: "auto", marginBottom: "auto"}} id="search" type="text" name="search" placeholder="Search Artist.." onChange={this.onSearchChange}></input>
-            <input style={{border: "none",fontSize: "17px", padding: "6px", marginTop: "auto", marginBottom: "auto"}} type="submit" value="Search Artist"></input>
-          </div>
-          
-          </form>
-          </li>
-            </ul>
-        </div>
-        </div>
+              </NavItem>
+              <NavItem>
+              <form class="form-inline my-2 my-lg-0" autoComplete="off" onSubmit={this.onSubmit}>
+              <div style={{float: "right", marginTop: "auto", marginBottom: "auto", marginLeft: "16px", marginRight: "16px"}} class="autocomplete">
+                <input style={{border: "none",fontSize: "17px", padding: "6px", marginTop: "auto", marginBottom: "auto"}} id="search" type="text" name="search" placeholder="Search Artist.." onChange={this.onSearchChange}></input>
+                <input style={{border: "none",fontSize: "17px", padding: "6px", marginTop: "auto", marginBottom: "auto"}} type="submit" value="Search Artist"></input>
+              </div>
+              
+              </form>
+              </NavItem>
+            </Nav>
+          </Collapse>
+        </Navbar>
+      </div>
     )
   }
 }
