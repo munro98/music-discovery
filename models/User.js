@@ -20,7 +20,11 @@ const UserSchema = new mongoose.Schema({
   secret: {
     type: String,
     default: "Super secret"
-  }
+  },
+  favourites: [{
+    type: String,
+    unique: true
+  }]
 });
 
 const User = mongoose.model("User", UserSchema);

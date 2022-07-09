@@ -29,15 +29,16 @@ import EmbededYoutube from './EmbededYoutube';
 import { 
   EmbededYoutube_CB_ENUMS,
 } from './EmbededYoutube';
+import ytem from './EmbededYoutube';
 
 import SimilarArtistsTable from './SimilarArtistsTable';
 
 /*
+Fix youtube player diappearing when changing routes
+Scale youtube player
 Fix Search bar autofill suggestions hanging around 
-Show favourited songs on profile page
-
-store favourited songs
-display filled heart next to songs that are favourited and empty heat if not
+Show favourited with Red heart on profile page
+Store favourited songs
 
 */
 
@@ -309,7 +310,7 @@ export class Music extends Component {
   render() {
     const {user} = this.props.authState;
     let tags = this.state.artistTags.map( (val, i) => 
-      <span>{val.name + ", "}</span>
+      <span key={i}>{val.name + ", "}</span>
     );
     if (tags.length >= 2) {
         tags = tags.slice(0, tags.length-2);
@@ -322,6 +323,8 @@ export class Music extends Component {
             <div className="row" >
                 <div className="col-sm-6">
                     <EmbededYoutube ref={this.ytPlayer} YTid={this.state.ytId} callbackHandler={this.callbackHandler}> </EmbededYoutube>
+                    <br></br>
+                    <br></br>
                     <img src={this.state.artistImage} width="160px" style={{float: "right"}}></img>
                     <div>
                       <h2> {this.props.music.selectedArtist} </h2>
@@ -336,6 +339,7 @@ export class Music extends Component {
 
           
             <div className="col-sm-6">
+              <h5>Top Songs</h5>
               <SongTable songs={this.state.artistTopSongs} callbackHandler={this.callbackHandler}></SongTable>
               <br></br>
               <br></br>

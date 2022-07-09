@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { connect } from "react-redux";
-import { Route, Routes, Link } from 'react-router-dom'
+import { Route, Routes, Link, useNavigate } from 'react-router-dom'
 import {
   Collapse,
   Navbar,
@@ -138,7 +138,11 @@ export class NavBar extends Component {
     console.log("Searching " + this.searchInput);
     if (this.searchInput.length > 0) {
       this.props.changeArtist(this.searchInput);
+      let imePesme = this.searchInput.replace(/&/g, '%26');
+        //window.history.pushState("", 'Music', "/music/?artist="+imePesme);
+        this.props.navigation("/music/?artist="+imePesme)
     }
+    this.closeAllLists();
     
     //this.props.login(user);
   };
@@ -186,21 +190,25 @@ export class NavBar extends Component {
               <NavItem>
                 <Link className="nav-link" exact to="/">Home </Link>
               </NavItem>
-              <NavItem>
-                <Link className="nav-link" exact to="/music">Music </Link>
-              </NavItem>
               {this.props.authState.isAuthenticated ? (
                 <NavItem>
                 < Link className="nav-link" exact to="/logout">Logout </Link>
                 </NavItem>
-            ):
+              ):
                 <NavItem>
                   <Link className="nav-link" exact to="/login">Login </Link>
                 </NavItem>
-            }
-              <NavItem>
+              }
+              {this.props.authState.isAuthenticated ? (
+                <NavItem>
                 <Link className="nav-link" exact to="/profile">Profile </Link>
               </NavItem>
+              ):
+              <NavItem>
+              <Link className="nav-link" exact to="/register">Register </Link>
+            </NavItem>
+              }
+              
               <NavItem>
               <form class="form-inline my-2 my-lg-0" autoComplete="off" onSubmit={this.onSubmit}>
               <div style={{float: "right", marginTop: "auto", marginBottom: "auto", marginLeft: "16px", marginRight: "16px"}} class="autocomplete">
@@ -234,8 +242,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const changeArtist = ( artistName) => (dispatch) => {
   console.log("dispatching " + artistName);
-  let imePesme = artistName.replace(/&/g, '%26');
-        window.history.pushState("", 'Music', "/music/?artist="+imePesme);
+  
   dispatch({
     type: CHANGE_ARTIST,
     payload: artistName

@@ -37,12 +37,9 @@ class SongTable extends Component {
         let list = this.props.songs;
         let items = list.map( (val, i) =>
             <tr key={i} style={ i % 2 == 0 ? {backgroundColor: "rgba(0,0,0, 0.1)"} : {backgroundColor: "rgba(0,0,0, 0.0)"} }>
-                <td style={{overflow: 'hidden', whiteSpace: 'nowrap'}}>
+                <td style={{verticalAlign: "center",overflow: 'hidden', whiteSpace: 'nowrap'}}>
                 <button id="play-button" style={stylePlayerButton} onClick={this.onPlayDown} song_id={i} song_name={val.name}>
-                    <svg id="icon-skip-play" viewBox="0 0 24 24" width="100%" height="100%" style={{fill: "rgb(200, 200, 200)"}}>
-                        <path d="M 17.488289,12 4.3498907,3.6967476 V 20.303252 Z"></path>
-                        <path d="M0 0h24v24H0z" fill="none"></path>
-                    </svg>
+                <span style={{fontSize: "30px", color: "rgb(200, 200, 200)", position: "relative", top: "-2px"}}>&#9829;</span>
                 </button>
                 </td>
                 <td style={{overflow: 'hidden', whiteSpace: 'nowrap'}}>
@@ -53,14 +50,13 @@ class SongTable extends Component {
                     </svg>
                 </button>
                 </td>
-                <td style={{verticalAlign: "center"}}> <span style={{align: "lfet"}}>{" " + i}</span>{" -  " + val.name }</td>
+                <td style={{verticalAlign: "center"}}> <span style={{align: "left"}}>{" " + i}</span>{" -  " + val.name }</td>
                 <td></td>
             </tr>
         );
         // <div style={divStyle}>
         return (
             <div style={divStyle}>
-            <h5>Top Songs</h5>
             <table id="songs" style={{width: "100%"}}>
                 <tbody>
                 <tr>

@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import { playPressed } from "../actions/uiActions";
 import{useSelector, useDispatch} from "react-redux"
 
+import {CHANGE_ARTIST} from '../reducers/musicReducer';
+
 import Slider from './Slider';
 
 // list of all possible enums in child
@@ -116,7 +118,7 @@ class ControlBar extends Component {
 
     onClickArtist() {
         console.log("ControlBar.onClickArtist:");
-        //this.props.changeArtist(this.props.music.playingArtist);
+        this.props.changeArtist(this.props.music.playingArtist);
     }
 
     render() {
@@ -194,16 +196,17 @@ const mapStateToProps = (state) => ({ //Maps state element in redux store to pro
     music: state.music
   });
 
-const mapDispatchToProps = dispatch => {
-    return {
-        playPressed: id => {
-        dispatch(playPressed())
-      }
-    }
-  }
+const changeArtist = ( artistName) => (dispatch) => {
+console.log("dispatching " + artistName);
+let imePesme = artistName.replace(/&/g, '%26');
+        window.history.pushState("", 'Music', "/music/?artist="+imePesme);
+dispatch({
+    type: CHANGE_ARTIST,
+    payload: artistName
+});
+};
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(ControlBar)
+export default connect(mapStateToProps, {changeArtist})(ControlBar)
 
 export {
     VIEW_CALLBACK_ENUMS as ControlBar_CB_ENUMS,

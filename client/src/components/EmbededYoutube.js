@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-
 // list of all possible enums in child
 const VIEW_CALLBACK_ENUMS = {
     PLAY: 'EmbededYoutube/PLAY',
@@ -10,7 +9,6 @@ const VIEW_CALLBACK_ENUMS = {
     UPDATE: 'EmbededYoutube/UPDATE',
   };
 
-
 class EmbededYoutube extends Component {
     constructor(props) {
         super(props)
@@ -18,9 +16,7 @@ class EmbededYoutube extends Component {
         this.playVideo = this.playVideo.bind(this);
         this.onSongEnded = this.onSongEnded.bind(this);
         this.onReady = this.onReady.bind(this);
-
         this.reportVideoTime = this.reportVideoTime.bind(this);
-
         this.loadYT = null;
     }
 
@@ -45,11 +41,7 @@ class EmbededYoutube extends Component {
                 onReady: this.onReady
                 }
             })
-
-            
-
             })
-    
     }
 
     onReady(e) {
@@ -114,7 +106,6 @@ class EmbededYoutube extends Component {
         return this.player.getVolume();
     }
 
-
     onPlayerStateChange = (e) => {
         console.log(e.data);
         //if (typeof this.props.onStateChange === 'function') {
@@ -143,9 +134,8 @@ class EmbededYoutube extends Component {
     }
 
     onSongEnded() {
-        this.props.callbackHandler(
-            VIEW_CALLBACK_ENUMS.END,
-            "");
+        let event = new CustomEvent('build', { detail: "YT_SONG_END" });
+        document.getElementById("main-music-app").dispatchEvent(event);
     }
 
     onSongSeekChange(e) {
@@ -165,14 +155,6 @@ class EmbededYoutube extends Component {
             "");
     }
 
-    /*
-            <img 
-            style={albumStyle}
-            src="albumPlaceHolder.jpg" 
-            alt="Album Art"
-            height="100px"
-            width="100px" />
-    */
     // https://getbootstrap.com/docs/4.0/utilities/embed/
     render() {
         return (
@@ -183,6 +165,20 @@ class EmbededYoutube extends Component {
         )
     }
 }
+
+export const ytem = ({ embedId }) => (
+    <div className="video-responsive">
+      <iframe
+        width="853"
+        height="480"
+        src={`https://www.youtube.com/embed/${embedId}`}
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        title="Embedded youtube"
+      />
+    </div>
+  );
 
 export default EmbededYoutube
 

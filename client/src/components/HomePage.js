@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { connect } from "react-redux";
-import { Route, Routes, Link } from 'react-router-dom'
+import { Route, Routes, Link, useNavigate } from 'react-router-dom'
 import {
   Button,
 } from "reactstrap";
@@ -18,11 +18,20 @@ import Profile from './Profile';
 import Home from './Home';
 import Music from './Music';
 import NavBar from './NavBar';
+//import RootNav from './NavBar';
 import ControlBar from './ControlBar';
 
 var divStyle = {
 color:'white'
 };
+
+function RootNav (props){
+  const navigation = useNavigate() // extract navigation prop here
+  console.log("building navigaaaaaaaaaaaation" + navigation); 
+  
+return <NavBar {...props} navigation={navigation} /> //pass to your component.
+
+}
 
 export class HomePage extends Component {
 
@@ -36,8 +45,6 @@ export class HomePage extends Component {
   componentDidMount() {
     // Check if session cookie is present
     store.dispatch(isAuth());
-
-
   }
 
   static propTypes = {
@@ -52,14 +59,14 @@ export class HomePage extends Component {
 
     return (
       <div>
-        <NavBar lastfm_api={this.props.lastfm_api} ></NavBar>
+        <RootNav lastfm_api={this.props.lastfm_api} ></RootNav>
       <body>
         
        <div className="container" style={{paddingTop: "60px", paddingBottom: "60px"}}>
         <div className="main">
 
             <Routes>
-            <Route exact path ="/" element={<Home></Home>}/>
+            <Route exact path ="/" element={<Music youtube_api={this.props.youtube_api} lastfm_api={this.props.lastfm_api}></Music>}/>
               <Route exact path ="/profile" element={<Profile></Profile>}/>
               <Route exact path ="/login" element={<Login></Login>}/>
               <Route exact path ="/register" element={<Register></Register>}/>

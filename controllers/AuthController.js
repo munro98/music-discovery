@@ -97,3 +97,15 @@ exports.authChecker = (req, res) => {
     return res.status(401).json({ msg: "Unauthorized" });
   }
 };
+
+exports.saveTrack = (req, res) => {
+  //const { name, email, password } = req.body;
+  //const result = registerSchema.validate({ name, email, password});
+  const sessUser = req.session.user;
+  const {track} = req.body;
+  if (sessUser) {
+    //TODO:
+  } else {
+    return res.status(401).json({ msg: "Unauthorized" });
+  }
+};
