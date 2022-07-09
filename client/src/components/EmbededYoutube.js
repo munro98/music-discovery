@@ -88,6 +88,19 @@ class EmbededYoutube extends Component {
     setVolVideo() {
         this.player.setVolume();
     }
+    
+    /*
+    -1 – unstarted
+    0 – ended
+    1 – playing
+    2 – paused
+    3 – buffering
+    5 – video cued
+    */
+    getPlayerState() {
+        return this.player.getPlayerState();
+        
+    }
 
     setSeekVideo(f, allowSeekAhead) {
         let seconds = f * this.player.getDuration();

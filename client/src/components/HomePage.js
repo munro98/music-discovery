@@ -25,9 +25,10 @@ var divStyle = {
 color:'white'
 };
 
+// Wrapper function to inject useNavigates react hook as a prop
 function RootNav (props){
   const navigation = useNavigate() // extract navigation prop here
-  console.log("building navigaaaaaaaaaaaation" + navigation); 
+  //console.log("building navigaaaaaaaaaaaation" + navigation); 
   
 return <NavBar {...props} navigation={navigation} /> //pass to your component.
 

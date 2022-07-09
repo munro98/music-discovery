@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 import { Navigate } from 'react-router-dom'
 import { logout } from '../actions/authActions';
 import { buttonReset, setPlayingSong, setCurrentPlaylist} from '../actions/uiActions';
-import {CHANGE_ARTIST} from '../reducers/musicReducer';
+import {CHANGE_ARTIST, SET_PLAYING_ARTIST} from '../reducers/musicReducer';
 
 import QueryString from 'query-string';
 
@@ -39,7 +39,7 @@ Scale youtube player
 Fix Search bar autofill suggestions hanging around 
 Show favourited with Red heart on profile page
 Store favourited songs
-
+Make slider Functional
 */
 
 export class Music extends Component {
@@ -92,7 +92,13 @@ export class Music extends Component {
       console.log(e)
 
       if (e.detail == "PLAY") {
-        self.ytPlayer.current.playVideo();
+        let state = self.ytPlayer.current.getPlayerState();
+        if (state == 1) {
+          self.ytPlayer.current.pauseVideo();
+        } else if (state == 2) {
+          self.ytPlayer.current.playVideo();
+        }
+        
 
       } else if (e.detail == "NEXT") {
         if (this.props.music.currentIndex+1 < this.props.music.currentPlaylist.length) {
@@ -198,6 +204,7 @@ export class Music extends Component {
       console.log("play " + data.songName)
       this.props.setPlayingSong(data.songName);
       //this.props.setCurrentPlaylist(this.state.artistTopSongs); TODO
+      this.props.setPlayingArtist(this.props.music.selectedArtist);
 
       this.setState({songIndex : data.songId});
       this.onPlayFromTable(data.songName);
@@ -207,7 +214,10 @@ export class Music extends Component {
       //this.ytPlayer.current.playVideo();
       //this.props.callbackHandler(type, data);
       //console.log("play " + data)
-      this.props.setPlayingSong(this.state.artistTopSongs[this.state.songIndex].name);
+      //this.props.setPlayingSong(this.state.artistTopSongs[this.state.songIndex].name);
+      //this.props.setPlayingArtist(this.props.music.selectedArtist);
+
+
       if (this.state.songIndex <= this.state.artistTopSongs.length) {
         this.onPlayFromTable(this.state.artistTopSongs[this.state.songIndex].name);
       }
@@ -375,4 +385,12 @@ const changeArtist = ( artistName) => (dispatch) => {
   });
 };
 
-export default connect(mapStateToProps, { logout, buttonReset, changeArtist, setPlayingSong, setCurrentPlaylist })(Music);
+const setPlayingArtist = ( artistName) => (dispatch) => {
+  console.log("dispatching " + artistName);
+  dispatch({
+    type: SET_PLAYING_ARTIST,
+    payload: artistName
+  });
+};
+
+export default connect(mapStateToProps, { logout, buttonReset, changeArtist, setPlayingSong, setPlayingArtist, setCurrentPlaylist })(Music);

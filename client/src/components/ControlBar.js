@@ -122,28 +122,15 @@ class ControlBar extends Component {
     }
 
     render() {
-
-        
-        // return (
-        //     <footer  className="fixed-bottom flex-shrink-0 py-4 bg-dark text-white-50">
-               
-        //     <div>Hello</div>
-        //     </footer>
-        // )
-        
         return (
             <footer id="sticky-footer" className="fixed-bottom footer mt-auto py-1" style={{backgroundColor: "rgb(80, 80, 80)"}}>
                 <div style={{}} >
             <div>
-            
-            
             <Slider ref={this.slider} onChange={this.onSongSeekChange}></Slider>
-            
-
             <div style={{float : "left", margin: "12px", color: "rgb(240, 240, 240)"}}>
-            <span > <button class="btn btn-link" style={{color: "rgb(200, 200, 200)"}} onClick={this.onClickArtist}> {"Artist: " + this.props.music.playingArtist} </button> </span>
+            <span > <button class="btn btn-link" style={{color: "rgb(240, 240, 240)", height: "26px"}} onClick={this.onClickArtist}> {this.props.music.playingArtist} </button> </span>
             <br></br>
-            <span style={{color: "rgb(240, 240, 240)"}}>{this.props.music.playingSong}</span>
+            <span > <button class="btn btn-link" style={{color: "rgb(240, 240, 240)", height: "26px", textDecoration: "none"}} onClick={this.onClickArtist}> {this.props.music.playingSong} </button> </span>
             
             
             </div>

@@ -1,6 +1,7 @@
 export const CHANGE_ARTIST = "CHANGE_ARTIST";
 export const SET_PLAYING_SONG = "SET_PLAYING_SONG";
 export const SET_CURRENT_PLAYLIST = "SET_CURRENT_PLAYLIST";
+export const SET_PLAYING_ARTIST = "SET_PLAYING_ARTIST";
 
 export const SKIP_NEXT = "SKIP_NEXT";
 export const SKIP_PREV = "SKIP_PREV";
@@ -33,6 +34,11 @@ export default function (state = initialState, action) {
         return {
             ...state,
             playingSong: action.payload
+        };
+        case SET_PLAYING_ARTIST:
+        return {
+            ...state,
+            playingArtist: action.payload
         };
         default:
             return state;

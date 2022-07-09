@@ -147,6 +147,12 @@ export class NavBar extends Component {
     //this.props.login(user);
   };
 
+  onLogout = (e) => {
+    e.preventDefault();
+    this.props.buttonReset();
+    this.props.logout();
+  };
+
   toggle() {
     this.setState({
       isOpen: !this.state.isOpen
