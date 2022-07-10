@@ -1,16 +1,8 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { connect } from "react-redux";
-
 
 import {CHANGE_ARTIST} from '../reducers/musicReducer';
 
-const divStyle = {
-    width: "100%",
-    height: "100%",
-    bottom: "100px",
-    //overflowY: "scroll"
-};
 
 class SimilarArtistsTable extends Component {
     constructor(props) {
@@ -36,7 +28,6 @@ class SimilarArtistsTable extends Component {
             </tr>
 
         );
-        //<div class="d-flex justify-content-center">
         return (
             <div className="">
             <h5>Similar Artists</h5>
@@ -54,7 +45,7 @@ class SimilarArtistsTable extends Component {
         )
     }
 }
-///*
+
 const mapStateToProps = (state) => ({ //Maps state to redux store as props
     music: state.music
   });
@@ -69,7 +60,5 @@ const changeArtist = ( artistName) => (dispatch) => {
     });
       
   };
-  //*/
-//export default (SimilarArtistsTable);
 export default connect(mapStateToProps, {changeArtist})(SimilarArtistsTable);
   

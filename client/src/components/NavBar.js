@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { connect } from "react-redux";
-import { Route, Routes, Link, useNavigate } from 'react-router-dom'
+import { Link} from 'react-router-dom'
 import {
   Collapse,
   Navbar,
@@ -9,24 +9,15 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem } from 'reactstrap';
+} from 'reactstrap';
 import PropTypes from "prop-types";
-import { buttonClicked } from "../actions/uiActions";
 import './style.css';
 import store from '../store';
 import { isAuth } from '../actions/authActions'
-import {Navigate} from 'react-router-dom'
 
 import {CHANGE_ARTIST} from '../reducers/musicReducer';
-import Login from './Login';
-import Register from './Register';
 
 import './appstyles.css';
-import $ from 'jquery';
 
 export class NavBar extends Component {
 

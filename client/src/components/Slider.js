@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-
 const style = { width: '80%', margin: '7%' }
 const soundcloudStyle = { height: '80%' }
 

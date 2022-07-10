@@ -106,6 +106,7 @@ class Register extends Component {
               </h2>
             </CardTitle>
             <CardSubtitle className="text-muted">
+              Register to view your favourited songs!
               Already have an account?
               <Link to="/login"> Log In. </Link>
             </CardSubtitle>

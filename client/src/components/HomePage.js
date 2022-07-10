@@ -12,6 +12,7 @@ import { isAuth } from '../actions/authActions'
 import {Navigate} from 'react-router-dom'
 
 import Login from './Login';
+import Logout from './Logout';
 import Register from './Register';
 import Secret from './Secret';
 import Profile from './Profile';
@@ -70,6 +71,7 @@ export class HomePage extends Component {
             <Route exact path ="/" element={<Music youtube_api={this.props.youtube_api} lastfm_api={this.props.lastfm_api}></Music>}/>
               <Route exact path ="/profile" element={<Profile></Profile>}/>
               <Route exact path ="/login" element={<Login></Login>}/>
+              <Route exact path ="/logout" element={<Logout></Logout>}/>
               <Route exact path ="/register" element={<Register></Register>}/>
               <Route exact path ="/secret" element={<Secret></Secret>}/>
               <Route exact path ="/music" ref={this.musicComp} controlBar={this.controlBar} element={<Music youtube_api={this.props.youtube_api} lastfm_api={this.props.lastfm_api}></Music>}/>

@@ -37,6 +37,7 @@ import SimilarArtistsTable from './SimilarArtistsTable';
 Fix Search bar autofill suggestions hanging around 
 Show favourited with Red heart on profile page
 Store favourited songs
+Make forward and back buttons work
 */
 
 export class Music extends Component {
