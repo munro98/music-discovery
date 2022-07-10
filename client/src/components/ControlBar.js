@@ -60,6 +60,21 @@ class ControlBar extends Component {
         this.sliderVol = React.createRef();
     }
 
+    componentDidMount() {
+        let self = this;
+        document.getElementById("control-bar").addEventListener('build', function (e) {
+            
+            if (e.detail.action == "UPDATE_PROGRESS") { 
+                
+                let factor = e.detail.value;
+                if (factor >= 0.0 || factor <= 1.0 && !isNaN(factor)) {
+                    console.log("UPDATE_PROGRESS" + e.detail.value);
+                    self.slider.current.setFactor(factor);
+                }
+            }
+        });
+    }
+
     onSongEnded() {
         this.props.callbackHandler(
             VIEW_CALLBACK_ENUMS.END,
@@ -68,18 +83,19 @@ class ControlBar extends Component {
 
     onSongSeekChange(e) {
         let newProgress = e.target.value/10000.0;
-        //this.setState({songProgress : newProgress});
-        //console.log(newProgress);
-        this.props.callbackHandler(
-            VIEW_CALLBACK_ENUMS.SEEK_CHANGE,
-            {value : newProgress});
+        let event = new CustomEvent('build', { detail: {action: "SEEK", value: newProgress} });
+        document.getElementById("main-music-app").dispatchEvent(event);
     }
 
     onSongSeekUp(e) {
+        /*
         let newProgress = e.target.value/10000.0;
-        this.props.callbackHandler(
-            VIEW_CALLBACK_ENUMS.SEEK_SEEK_UP,
-            {value : newProgress});
+        let event = new CustomEvent('build', { detail: {action: "SEEK", value: newProgress} });
+        document.getElementById("main-music-app").dispatchEvent(event);
+        //this.props.callbackHandler(
+        //    VIEW_CALLBACK_ENUMS.SEEK_SEEK_UP,
+        //    {value : newProgress});
+        */
     }
 
     onVolumeChange(e) {
@@ -91,17 +107,17 @@ class ControlBar extends Component {
     }
 
     onPlayDown(e) {
-        let event = new CustomEvent('build', { detail: "PLAY" });
+        let event = new CustomEvent('build', { detail: {action: "PLAY"} });
         document.getElementById("main-music-app").dispatchEvent(event);
     }
 
     onPrevDown(e) {
-        let event = new CustomEvent('build', { detail: "PREV" });
+        let event = new CustomEvent('build', { detail: {action: "PREV"} });
         document.getElementById("main-music-app").dispatchEvent(event);
     }
 
     onNextDown(e) {
-        let event = new CustomEvent('build', { detail: "NEXT" });
+        let event = new CustomEvent('build', { detail: {action: "NEXT"} });
         document.getElementById("main-music-app").dispatchEvent(event);
     }
 
@@ -123,6 +139,7 @@ class ControlBar extends Component {
 
     render() {
         return (
+            <div id="control-bar">
             <footer id="sticky-footer" className="fixed-bottom footer mt-auto py-1" style={{backgroundColor: "rgb(80, 80, 80)"}}>
                 <div style={{}} >
             <div>
@@ -131,8 +148,6 @@ class ControlBar extends Component {
             <span > <button class="btn btn-link" style={{color: "rgb(240, 240, 240)", height: "26px"}} onClick={this.onClickArtist}> {this.props.music.playingArtist} </button> </span>
             <br></br>
             <span > <button class="btn btn-link" style={{color: "rgb(240, 240, 240)", height: "26px", textDecoration: "none"}} onClick={this.onClickArtist}> {this.props.music.playingSong} </button> </span>
-            
-            
             </div>
             </div>
             </div>
@@ -173,6 +188,7 @@ class ControlBar extends Component {
                 
                 </div>
           </footer>
+          </div>
         )
     }
 }

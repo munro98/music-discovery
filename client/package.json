@@ -17,6 +17,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-transition-group": "^4.3.0",
+    "react-youtube": "^9.0.3",
     "reactstrap": "^8.4.1",
     "redux": "^4.2.0",
     "redux-thunk": "^2.4.1",

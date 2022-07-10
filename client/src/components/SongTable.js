@@ -39,7 +39,7 @@ class SongTable extends Component {
             <tr key={i} style={ i % 2 == 0 ? {backgroundColor: "rgba(0,0,0, 0.1)"} : {backgroundColor: "rgba(0,0,0, 0.0)"} }>
                 <td style={{verticalAlign: "center",overflow: 'hidden', whiteSpace: 'nowrap'}}>
                 <button id="play-button" style={stylePlayerButton} onClick={this.onPlayDown} song_id={i} song_name={val.name}>
-                <span style={{fontSize: "30px", color: "rgb(200, 200, 200)", position: "relative", top: "-2px"}}>&#9829;</span>
+                <span style={{fontSize: "30px", color: "rgb(200, 200, 200)", position: "relative", top: "-4px"}}>&#9829;</span>
                 </button>
                 </td>
                 <td style={{overflow: 'hidden', whiteSpace: 'nowrap'}}>

@@ -51,6 +51,7 @@ class Slider extends Component {
         if (this.state.hoverVolume === false) {
             //this.setState({ factor: f});
             let newProgress = f * 10000.0;
+            //console.log("newProgress " + f + " " + newProgress);
             this.input.current.value = newProgress;
         }
     }

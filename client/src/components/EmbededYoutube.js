@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
+import YouTube from 'react-youtube';
+
+import "./appstyles.css";
+
 // list of all possible enums in child
 const VIEW_CALLBACK_ENUMS = {
     PLAY: 'EmbededYoutube/PLAY',
@@ -9,6 +13,7 @@ const VIEW_CALLBACK_ENUMS = {
     UPDATE: 'EmbededYoutube/UPDATE',
   };
 
+  // https://developers.google.com/youtube/iframe_api_reference
 class EmbededYoutube extends Component {
     constructor(props) {
         super(props)
@@ -18,52 +23,26 @@ class EmbededYoutube extends Component {
         this.onReady = this.onReady.bind(this);
         this.reportVideoTime = this.reportVideoTime.bind(this);
         this.loadYT = null;
+        this.onReady = this.onReady.bind(this);
+        this.player = null;
     }
 
     componentDidMount() {
-        // https://developers.google.com/youtube/iframe_api_reference
-        if (!this.loadYT) {
-            this.loadYT = new Promise((resolve) => {
-                const tag = document.createElement('script')
-                tag.src = 'https://www.youtube.com/iframe_api'
-                const firstScriptTag = document.getElementsByTagName('script')[0]
-                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
-                window.onYouTubeIframeAPIReady = () => resolve(window.YT)
-            })
-            }
-            this.loadYT.then((YT) => {
-            this.player = new YT.Player(this.youtubePlayerAnchor, {
-                height: this.props.height || 390,
-                width: this.props.width || 640,
-                videoId: this.props.YTid,
-                events: {
-                onStateChange: this.onPlayerStateChange,
-                onReady: this.onReady
-                }
-            })
-            })
+        
     }
 
     onReady(e) {
-        let self = this;
-            setInterval(function()  {
-            //console.log(self.player.getCurrentTime());
-            ///*
-            //console.log(self.ytPlayer.current.player);
-            if (self.player != undefined) {
-                //console.log(self.player.getCurrentTime());
-                self.reportVideoTime();
-            }
-            //*/
-        }
-        ,100);
     }
 
     reportVideoTime(){
-        return;// TODO: 
-        this.props.callbackHandler(
-            VIEW_CALLBACK_ENUMS.UPDATE,
-            {time : this.player.getCurrentTime()});
+        if (this.getPlayerState() == 1 || this.getPlayerState() == 2) {
+            let factor = this.player.getCurrentTime()/this.player.getDuration();
+            console.log("send" + factor);
+            if (factor >= 0.0 || factor <= 1.0 && !isNaN(factor)) {
+                let event = new CustomEvent('build', { detail: {action: "UPDATE_PROGRESS", value: factor} });
+                document.getElementById("control-bar").dispatchEvent(event);
+            }
+        }
     }
 
     setVideoTime(f){
@@ -168,14 +147,35 @@ class EmbededYoutube extends Component {
             "");
     }
 
+    onReady(e) {
+        // access to player in all event handlers via event.target
+        this.player = e.target;
+        e.target.pauseVideo();
+
+        let self = this;
+            setInterval(function()  {
+            //console.log(self.player.getCurrentTime());
+            if (self.player != undefined) {
+                //console.log(self.player.getCurrentTime());
+                self.reportVideoTime();
+            }
+
+        }
+        ,2000);
+    }
+
     // https://getbootstrap.com/docs/4.0/utilities/embed/
     render() {
-        return (
-            <div className="justify-content-center embed-responsive embed-responsive-21by9">
-                <div className="embed-responsive-item" ref={(r) => { this.youtubePlayerAnchor = r }}></div>
-            </div>
-            
-        )
+        const opts = {
+            height: '390',
+            width: '640',
+            playerVars: {
+              // https://developers.google.com/youtube/player_parameters
+              autoplay: 1,
+            },
+          };
+
+        return <YouTube className="video-responsive" videoId={this.props.videoId} opts={opts} onReady={this.onReady} />;
     }
 }
 

@@ -34,12 +34,9 @@ import ytem from './EmbededYoutube';
 import SimilarArtistsTable from './SimilarArtistsTable';
 
 /*
-Fix youtube player diappearing when changing routes
-Scale youtube player
 Fix Search bar autofill suggestions hanging around 
 Show favourited with Red heart on profile page
 Store favourited songs
-Make slider Functional
 */
 
 export class Music extends Component {
@@ -61,7 +58,7 @@ export class Music extends Component {
           artistImage: "",
           artistSimilar: [],
           artistTopSongs: [],
-          ytId: "",
+          ytId: "nZXRV4MezEw",
         }
         this.ytPlayer = React.createRef();
         this.controlBar = React.createRef();
@@ -91,39 +88,40 @@ export class Music extends Component {
     document.getElementById("main-music-app").addEventListener('build', function (e) { 
       console.log(e)
 
-      if (e.detail == "PLAY") {
+      if (e.detail.action == "PLAY") {
         let state = self.ytPlayer.current.getPlayerState();
+        console.log("state " + state)
         if (state == 1) {
           self.ytPlayer.current.pauseVideo();
         } else if (state == 2) {
           self.ytPlayer.current.playVideo();
         }
-        
-
-      } else if (e.detail == "NEXT") {
-        if (this.props.music.currentIndex+1 < this.props.music.currentPlaylist.length) {
+      } else if (e.detail.action == "NEXT") {
+        if (self.props.music.currentIndex+1 < self.props.music.currentPlaylist.length) {
           // TODO: play next song
-          //this.props.skipNext()
-          //let ind = this.props.music.currentIndex
-          //this.onPlayFromTable(this.props.music.playingArtist, this.props.music.currentPlaylist[ind]);
+          //self.props.skipNext()
+          //let ind = self.props.music.currentIndex
+          //self.onPlayFromTable(self.props.music.playingArtist, self.props.music.currentPlaylist[ind]);
         }
 
-      } else if (e.detail == "PREV") {
-        if (this.props.music.currentIndex-1 >= 0) {
+      } else if (e.detail.action == "PREV") {
+        if (self.props.music.currentIndex-1 >= 0) {
           // TODO: play next song
-          //this.props.skipPrev()
-          //let ind = this.props.music.currentIndex
-          //this.onPlayFromTable(this.props.music.playingArtist, this.props.music.currentPlaylist[ind]);
+          //self.props.skipPrev()
+          //let ind = self.props.music.currentIndex
+          //self.onPlayFromTable(self.props.music.playingArtist, self.props.music.currentPlaylist[ind]);
         }
 
-      } else if (e.detail == "YT_SONG_END") {
-        if (this.props.music.currentIndex+1 < this.props.music.currentPlaylist.length) {
+      } else if (e.detail.action == "YT_SONG_END") {
+        if (self.props.music.currentIndex+1 < self.props.music.currentPlaylist.length) {
           // TODO: play next song
-          //this.props.skipNext()
-          //let ind = this.props.music.currentIndex
-          //this.onPlayFromTable(this.props.music.playingArtist, this.props.music.currentPlaylist[ind]);
+          //self.props.skipNext()
+          //let ind = self.props.music.currentIndex
+          //self.onPlayFromTable(self.props.music.playingArtist, self.props.music.currentPlaylist[ind]);
         }
-        
+      } else if (e.detail.action == "SEEK") {
+        console.log("seek to " + e.detail.value)
+          self.ytPlayer.current.setSeekVideo(e.detail.value, true);
       }
   }, false);
 
@@ -174,6 +172,7 @@ export class Music extends Component {
           let top = data.toptracks.track;
           this.setState({artistTopSongs: top});
           //let vID = this.getVID(data.toptracks.track[0].name);
+          //this.setState({ytId: vID});
         }).catch(err => {
           this.setState({artistName: "Request Error"});
           console.log('The request failed!!!! ' + err); 
@@ -193,6 +192,8 @@ export class Music extends Component {
         }).catch(err => {
           console.log('The request failed!!!! ' + err); 
         });
+
+        
 
 
   }
@@ -309,7 +310,8 @@ export class Music extends Component {
         console.log(data);
         let vID = data.items[0].id.videoId;
         console.log(vID);
-        this.ytPlayer.current.loadNewVideo(vID)
+        //this.ytPlayer.current.loadNewVideo(vID)
+        this.setState({ytId: vID});
        
       }).catch(err => {
         this.setState({artistName: "YT Request Error"});
@@ -331,39 +333,52 @@ export class Music extends Component {
          
         <div className="row" >
             <div className="row" >
-                <div className="col-sm-6">
-                    <EmbededYoutube ref={this.ytPlayer} YTid={this.state.ytId} callbackHandler={this.callbackHandler}> </EmbededYoutube>
+                <div className="col">
+                    <EmbededYoutube ref={this.ytPlayer} videoId={this.state.ytId} callbackHandler={this.callbackHandler}> </EmbededYoutube>
                     <br></br>
-                    <br></br>
-                    <img src={this.state.artistImage} width="160px" style={{float: "right"}}></img>
-                    <div>
-                      <h2> {this.props.music.selectedArtist} </h2>
-                      <p>
-                      Genres: {tags}
-                      </p>
-                    </div>
                     
-                    <br></br>
                 </div>
             </div>
+            </div>
 
-          
+            <div className="col-sm-6">
+              <br></br>
+              <div className="row" >
+                <div className="col">
+                  <h2> {this.props.music.selectedArtist} </h2>
+                  <p>
+                  Genres: {tags}
+                  </p>
+                </div>
+                <div className="col">
+                  <img src={this.state.artistImage} width="160px" style={{float: "right", marginRight: "16px"}}></img>
+                </div>
+              </div>
+              
+              <div>
+                
+              </div>
+              <br></br>
+            </div>
+            
+            <div className="row" >
             <div className="col-sm-6">
               <h5>Top Songs</h5>
               <SongTable songs={this.state.artistTopSongs} callbackHandler={this.callbackHandler}></SongTable>
               <br></br>
               <br></br>
             </div>
+
             <div className="col-sm-6">
-            
-            <p >
-            {this.state.artistBio + " "} 
-            <a href={this.state.artistURL}>LastFM Link</a>
-            </p>
-            <SimilarArtistsTable similarArtists={this.state.artistSimilar} callbackHandler={this.callbackHandler}></SimilarArtistsTable>
+              <p >
+              {this.state.artistBio + " "} 
+              <a href={this.state.artistURL}>LastFM Link</a>
+              </p>
+              <SimilarArtistsTable similarArtists={this.state.artistSimilar} callbackHandler={this.callbackHandler}></SimilarArtistsTable>
+            </div>
             </div>
         
-        </div>
+        
         
     </div>
     )
