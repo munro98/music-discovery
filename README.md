@@ -6,13 +6,14 @@ A web app with a sign up and login system for discovering music using the Youtub
 - Search artists
 - View artists top music and biography using lastFM api
 - Play artists top music inside an embeded Youtube player
+- Explore artists with similar styles
 - (In progress): Add music to your account and play them from you profile page
 - (In progress): Continous integration into AWS with AWS CodeDeploy
 
 ## Dependencies
 - Node.js
 - NPM
-- React
+- React v18, Bootstrap for frontend
 - MongoDB Atlas MongoURI
 - **.env file with ENV variables**, a .env template is provided
 

@@ -1,5 +1,19 @@
 const mongoose = require("mongoose");
 
+const TrackSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  artist: {
+    type: String,
+    required: true
+  }
+})
+
+const Track = mongoose.model("Track", TrackSchema);
+module.exports = Track;
+
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -21,10 +35,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: "Super secret"
   },
-  favourites: [{
-    type: String,
-    unique: true
-  }]
+  music: [TrackSchema]
 });
 
 const User = mongoose.model("User", UserSchema);

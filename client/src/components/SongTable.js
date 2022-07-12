@@ -18,7 +18,9 @@ const stylePlayerButton = {width: "40px", height: "40px", background: "transpare
 class SongTable extends Component {
     constructor(props) {
         super(props)
+
         this.onPlayDown = this.onPlayDown.bind(this);
+        this.onHeartPress = this.onHeartPress.bind(this);
     }
 
     onPlayDown(e) {
@@ -31,12 +33,23 @@ class SongTable extends Component {
             {songName : songName, songID : id});
     }
 
+    onHeartPress(e) {
+        let id = e.currentTarget.getAttribute('song_id');
+        let songName = e.currentTarget.getAttribute('song_name');
+        //console.log("favourite " + id);
+        //console.log(this.props.songs[id]);
+
+        const track = this.props.songs[id];
+        console.log("saving " + track.artist.name + " - " + track.name);
+        //this.props.saveTrack(track.name, track.artist.name); TODO:
+    }
+
     render() {
         let list = this.props.songs;
         let items = list.map( (val, i) =>
             <tr key={i} style={ i % 2 === 0 ? {backgroundColor: "rgba(0,0,0, 0.1)"} : {backgroundColor: "rgba(0,0,0, 0.0)"} }>
                 <td style={{verticalAlign: "center",overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                <button id="play-button" style={stylePlayerButton} onClick={this.onPlayDown} song_id={i} song_name={val.name}>
+                <button id="hear-button" style={stylePlayerButton} onClick={this.onHeartPress} song_id={i} song_name={val.name}>
                 <span style={{fontSize: "30px", color: "rgb(200, 200, 200)", position: "relative", top: "-4px"}}>&#9829;</span>
                 </button>
                 </td>
