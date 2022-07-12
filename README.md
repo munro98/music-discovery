@@ -1,9 +1,11 @@
 ## A Music Discovery Web App
 
-A web app with a sign up and login system for discovering music using the Youtube and LastFM apis.
+A web app with a sign up and login system for discovering music using the Youtube and LastFM APIs.
 
 ## Features
-- TODO
+- Search artists
+- View artists top music and biography using lastFM api
+- Play artists top music inside an embeded Youtube player
 
 
 ## Dependencies
