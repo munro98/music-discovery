@@ -3,16 +3,26 @@ const mongoose = require("mongoose");
 const TrackSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: true, 
+    unique: false
   },
   artist: {
     type: String,
-    required: true
+    required: true, 
+    unique: false
   }
 })
-
+TrackSchema.index({ name: 1, artist: 1 }, { unique: true })
+/*
+let TrackSchema = new mongoose.Schema({
+  firstName:  String,
+  lastName: String,
+  index: true,
+  unique: true, 
+  
+  });
+  */
 const Track = mongoose.model("Track", TrackSchema);
-module.exports = Track;
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -35,9 +45,12 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: "Super secret"
   },
-  music: [TrackSchema]
+  music: [[String]]
 });
 
 const User = mongoose.model("User", UserSchema);
 
-module.exports = User;
+module.exports = {
+  User : User,
+  Track : Track
+  }

@@ -46,9 +46,6 @@ export class NavBar extends Component {
   componentDidMount() {
     // Check if session cookie is present
     store.dispatch(isAuth());
-
-    // close the suggestions list
-    let self = this;
   }
 
   static propTypes = {

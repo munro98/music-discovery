@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
+import { connect } from "react-redux";
 import PropTypes from 'prop-types'
+
+import { saveTrack, deleteTrack } from '../actions/userActions';
 
 // list of all possible enums in child
 const VIEW_CALLBACK_ENUMS = {
@@ -15,6 +18,7 @@ const divStyle = {
 
 const stylePlayerButton = {width: "40px", height: "40px", background: "transparent", border: "0", outline: "none"}
 
+// A table to represent a list of songs
 class SongTable extends Component {
     constructor(props) {
         super(props)
@@ -23,25 +27,27 @@ class SongTable extends Component {
         this.onHeartPress = this.onHeartPress.bind(this);
     }
 
+    // Trigger music video to play
     onPlayDown(e) {
         let id = e.currentTarget.getAttribute('song_id');
         let songName = e.currentTarget.getAttribute('song_name');
-        console.log("play " + e.currentTarget + " "+ id);
+        console.log("playing " + e.currentTarget + " "+ id);
 
         this.props.callbackHandler(
             VIEW_CALLBACK_ENUMS.PLAY,
             {songName : songName, songID : id});
     }
 
+    // For saving/delete from favourite tracks
     onHeartPress(e) {
         let id = e.currentTarget.getAttribute('song_id');
         let songName = e.currentTarget.getAttribute('song_name');
-        //console.log("favourite " + id);
         //console.log(this.props.songs[id]);
 
         const track = this.props.songs[id];
         console.log("saving " + track.artist.name + " - " + track.name);
-        //this.props.saveTrack(track.name, track.artist.name); TODO:
+        const t = {name: track.name, artist: track.artist.name};
+        this.props.saveTrack(t);
     }
 
     render() {
@@ -83,7 +89,14 @@ class SongTable extends Component {
     }
 }
 
-export default SongTable
+const mapStateToProps = (state) => ({
+    button: state.ui.button,
+    authState: state.auth,
+    status: state.status,
+    loading: state.ui.loading
+  });
+
+export default connect(mapStateToProps,{saveTrack, deleteTrack})(SongTable);
 
 export {
     VIEW_CALLBACK_ENUMS as SONG_TABLE_CB_ENUMS,

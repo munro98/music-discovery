@@ -152,7 +152,13 @@ class EmbededYoutube extends Component {
         e.target.pauseVideo();
         ///*
         let self = this;
-            setInterval(function()  {
+
+        if (window.myInterval) {
+            clearInterval(window.myInterval);
+            window.myInterval = undefined;
+        }
+
+        window.myInterval = setInterval(function()  {
             //console.log(self.player.getCurrentTime());
             if (self.player != undefined) {
                 //console.log(self.player.getCurrentTime());
@@ -160,7 +166,7 @@ class EmbededYoutube extends Component {
             }
 
         }
-        ,2000);
+        ,600);
         //*/
     }
 

@@ -1,6 +1,6 @@
 
-const User = require("../models/User"); // User model
-
+const {User} = require("../models/User"); // User model
+const {Track} = require("../models/User");
 
 exports.getSecret = (req, res) => {
     const sessUser = req.session.user;
@@ -23,25 +23,23 @@ exports.getSecret = (req, res) => {
 
 exports.saveTrack = async (req, res) => {
     const sessUser = req.session.user;
-    const {track} = req.body;
+    console.log(req.body);
     if (sessUser) {
         try {
-            let track = new Track();
-            track.artist = req.params.artist;
-            track.name = req.params.name;
-            console.log(req);
-            /*
-            track.save(function (err) {
+            const track = [req.body.artist, req.body.name];
+            console.log("save -----------" + track)
+
+            User.findByIdAndUpdate(req.session.user.id, {"$addToSet":{"music": track}},{safe: true, new:true},(err,user) => {
                 if (err) {
                     console.log(err);
                     res.status(400).json({ msg: "Error saving track" });
                 }
-                console.log("track added!");
-                console.log(track);
+                console.log(user);
             });
-            */
+            
         } catch (e) {
-            res.status(400).json({ msg: "Error deleting track" });
+            res.status(400).json({ msg: "Error saving track" });
+            console.log(e);
         }
       
     } else {
@@ -55,17 +53,17 @@ exports.deleteTrack = async (req, res) => {
     if (sessUser) {
         try {
             console.log(req);
-            /*
-            const query = { name: req.params.name, artist: req.params.artist };
-            const result = await Track.deleteOne(query);
-            if (result.deletedCount === 1) { 
-                res.status(200).json({
-                    status: "Successful deletion",
-                });
-            } else {
-                res.status(400).json({ msg: "Error deleting track" });
-            }
-            */
+            //https://www.mongodb.com/docs/manual/reference/operator/update/pull/#mongodb-update-up.-pull
+            const track = [req.body.artist, req.body.name];
+            console.log("delete -----------" + track)
+
+            User.findByIdAndUpdate(req.session.user.id, {"$pull":{"music": track}},{safe: true, new:true},(err,user) => {
+                if (err) {
+                    console.log(err);
+                    res.status(400).json({ msg: "Error deleting track" });
+                }
+                console.log(user);
+            });
         } catch (e) {
             res.status(400).json({ msg: "Error deleting track" });
         }

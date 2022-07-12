@@ -19,9 +19,6 @@ export const saveTrack = ({ name, artist }) => (dispatch) => {
       })
   )
   .catch((err) => {
-      dispatch({
-      type: AUTH_FAIL
-      });
   });
 }
 
@@ -34,9 +31,7 @@ export const deleteTrack = ({ name, artist }) => (dispatch) => {
       })
   )
   .catch((err) => {
-      dispatch({
-      type: AUTH_FAIL
-      });
+      
   });
 }
 

@@ -39,11 +39,16 @@ class Slider extends Component {
         this.state = {
         factor: 0,
         hoverVolume: false
-        }
-        this.mouseEnter = this.mouseEnter.bind(this)
-        this.mouseLeave = this.mouseLeave.bind(this)
+        };
+        this.mouseEnter = this.mouseEnter.bind(this);
+        this.mouseLeave = this.mouseLeave.bind(this);
+        this.setFactor = this.setFactor.bind(this);
 
         this.input = React.createRef();
+    }
+
+    componentDidMount() {
+        this.setFactor(0.0);
     }
 
     setFactor(f) {
