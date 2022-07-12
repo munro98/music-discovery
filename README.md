@@ -6,7 +6,8 @@ A web app with a sign up and login system for discovering music using the Youtub
 - Search artists
 - View artists top music and biography using lastFM api
 - Play artists top music inside an embeded Youtube player
-
+- (In progress): Add music to your account and play them from you profile page
+- (In progress): Continous integration into AWS with AWS CodeDeploy
 
 ## Dependencies
 - Node.js
@@ -31,10 +32,11 @@ Install packages for React client
 ```
 To Test Locally
 
-change line ```"homepage": "https://example.com/sessions-auth-app",```
-from ```client/package.json```
-remove ```basename="/sessions-auth-app"```
+
+edit ```basename="/your-app-basename"```
 from ```client/src/index.js```
+create a .env in the root using the .env template with your database, lastfm key and youtube api keys
+create file ./client/src/clientConfig.js with your youtube and lastfm api keys using the clientConfig template.js
 
 
 Start Dev Server ( both React server and Nodejs server )
