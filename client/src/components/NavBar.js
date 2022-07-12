@@ -11,6 +11,8 @@ import {
   NavItem,
 } from 'reactstrap';
 import PropTypes from "prop-types";
+import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+
 import './style.css';
 import store from '../store';
 import { isAuth } from '../actions/authActions'
@@ -31,13 +33,13 @@ export class NavBar extends Component {
     }
 
     this.searchInput = "";
-
-
-    this.onSearchChange = this.onSearchChange.bind(this);
-    this.searchArtist = this.searchArtist.bind(this);
-    this.closeAllLists = this.closeAllLists.bind(this);
-    this.addActive = this.addActive.bind(this);
     this.toggle = this.toggle.bind(this);
+
+    this.handleOnSearch = this.handleOnSearch.bind(this);
+    this.handleOnHover = this.handleOnHover.bind(this);
+    this.handleOnSelect = this.handleOnSelect.bind(this);
+    this.formatResult = this.formatResult.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
 
@@ -47,9 +49,6 @@ export class NavBar extends Component {
 
     // close the suggestions list
     let self = this;
-    document.addEventListener("click", function (e) {
-      self.closeAllLists(e.target);
-    });
   }
 
   static propTypes = {
@@ -68,59 +67,12 @@ export class NavBar extends Component {
         console.log(data);
         ///*
         data.results.artistmatches.artist.forEach((artist) => {suggestions.push(artist.name)})
-        this.setState({suggestions: suggestions});
+        let s = suggestions.map( (element, index) => ({id: index, name: element}));
+        this.setState({suggestions: s});
         //*/
       }).catch(err => {
         console.log('The request failed!!!! ' + err); 
       });
-  }
-
-  onSearchChange(e) {
-    this.searchInput = e.currentTarget.value;
-    console.log(e.currentTarget.value);// e.g koan sound
-    this.searchArtist(e.currentTarget.value);
-
-    // TODO: fix only updating based on old state
-    let a, b, i, val = e.currentTarget.value.toLowerCase();
-    let inputEl = e.currentTarget;
-    let self = this;
-      /*close any already open lists of autocompleted values*/
-      this.closeAllLists();
-      if (!val) { return false;}
-      this.currentFocus = -1;
-
-      a = document.createElement("DIV");
-      a.setAttribute("id", "autocomplete-list");
-      a.setAttribute("className", "autocomplete-items");
-      //a.style.display = "contents"
-      a.style.position = "fixed"
-      
-      e.currentTarget.parentNode.appendChild(a);
-      for (i = 0; i < this.state.suggestions.length; i++) {
-        if (this.state.suggestions[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-
-          b = document.createElement("DIV");
-          b.style.backgroundColor = "rgb(255,255,255)";
-
-          b.innerHTML = "<strong>" + this.state.suggestions[i].substr(0, val.length) + "</strong>";
-          b.innerHTML += this.state.suggestions[i].substr(val.length);
-
-          b.innerHTML += "<input type='hidden' value='" + this.state.suggestions[i] + "'>";
-
-              b.addEventListener("click", function(e) {
-                inputEl.value = this.getElementsByTagName("input")[0].value;
-                
-                
-                self.searchInput = this.getElementsByTagName("input")[0].value;
-                console.log("inp = " + self.searchInput );
-
-              /*close the list of autocompleted values,*/
-              self.closeAllLists();
-          });
-          a.appendChild(b);
-        }
-      }
-
   }
 
   onSubmit = (e) => {
@@ -133,9 +85,6 @@ export class NavBar extends Component {
         //window.history.pushState("", 'Music', "/music/?artist="+imePesme);
         this.props.navigation("/music/?artist="+imePesme)
     }
-    this.closeAllLists();
-    
-    //this.props.login(user);
   };
 
   onLogout = (e) => {
@@ -154,33 +103,44 @@ export class NavBar extends Component {
     console.log(this.props.music.selectedArtist)
   }
 
-  addActive(x) {
-    if (!x) return false;
-    this.removeActive(x);
-    if (this.currentFocus >= x.length) this.currentFocus = 0;
-    if (this.currentFocus < 0) this.currentFocus = (x.length - 1);
-    x[this.currentFocus].classList.add("autocomplete-active");
-  }
-  removeActive(x) {
-    for (var i = 0; i < x.length; i++) {
-      x[i].classList.remove("autocomplete-active");
-    }
+  handleOnSearch = (string, results) => {
+    // onSearch will have as the first callback parameter
+    // the string searched and for the second the results.
+    this.searchArtist(string);
+    this.searchInput = string;
+    console.log(string)
   }
 
-  closeAllLists(elmnt) {
-    var x = document.getElementsByClassName("autocomplete-items");
-    for (var i = 0; i < x.length; i++) {
-      if (elmnt != x[i] && elmnt != document.getElementById("search")) {
-      x[i].parentNode.removeChild(x[i]);
-    }
+  handleOnHover(result) {
+    // the item hovered
+    console.log(result)
   }
+
+  handleOnSelect(item) {
+    // the item selected
+    this.searchInput = item.name;
+    if (item.length > 0) {
+      this.props.changeArtist(item.name);
+      let imePesme = item.name.replace(/&/g, '%26');
+        this.props.navigation("/music/?artist="+imePesme)
+    }
+
+    console.log(item)
+  }
+
+  formatResult(item){
+    return (
+      <>
+        <span style={{ zIndex: '99',display: 'block', textAlign: 'left' }}>{item.name}</span>
+      </>
+    )
   }
 
   render() {
     return (
       <div>
         <Navbar color="light" light expand="md">
-          <NavbarBrand href="/">Music Discovery</NavbarBrand>
+          <NavbarBrand style={{marginLeft: "6px"}} href="/">Music Discovery</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
@@ -206,13 +166,21 @@ export class NavBar extends Component {
             </NavItem>
               }
               
-              <NavItem>
-              <form class="form-inline my-2 my-lg-0" autoComplete="off" onSubmit={this.onSubmit}>
-              <div style={{float: "right", marginTop: "auto", marginBottom: "auto", marginLeft: "16px", marginRight: "16px"}} class="autocomplete">
-                <input style={{border: "none",fontSize: "17px", padding: "6px", marginTop: "auto", marginBottom: "auto"}} id="search" type="text" name="search" placeholder="Search Artist.." onChange={this.onSearchChange}></input>
-                <input style={{border: "none",fontSize: "17px", padding: "6px", marginTop: "auto", marginBottom: "auto"}} type="submit" value="Search Artist"></input>
-              </div>
+              <NavItem style={{width:"240px"}}>
+              <ReactSearchAutocomplete
+                styling={{ zIndex: '99'}}
+                items={this.state.suggestions}
+                onSearch={this.handleOnSearch}
+                onHover={this.handleOnHover}
+                onSelect={this.handleOnSelect}
+                autoFocus
+                formatResult={this.formatResult}
+              />
               
+              </NavItem>
+              <NavItem style={{marginTop: "4px", marginLeft: "8px"}}>
+              <form  autoComplete="off" onSubmit={this.onSubmit}>
+              <input style={{ border: "none",fontSize: "17px", padding: "6px", marginTop: "auto", marginBottom: "auto"}} type="submit" value="Search Artist"></input>
               </form>
               </NavItem>
             </Nav>

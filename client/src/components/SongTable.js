@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-const LFM_API = process.env.REACT_APP_LFM_API;
-
 // list of all possible enums in child
 const VIEW_CALLBACK_ENUMS = {
     PLAY: 'SONG_TABLE/PLAY',
@@ -36,7 +34,7 @@ class SongTable extends Component {
     render() {
         let list = this.props.songs;
         let items = list.map( (val, i) =>
-            <tr key={i} style={ i % 2 == 0 ? {backgroundColor: "rgba(0,0,0, 0.1)"} : {backgroundColor: "rgba(0,0,0, 0.0)"} }>
+            <tr key={i} style={ i % 2 === 0 ? {backgroundColor: "rgba(0,0,0, 0.1)"} : {backgroundColor: "rgba(0,0,0, 0.0)"} }>
                 <td style={{verticalAlign: "center",overflow: 'hidden', whiteSpace: 'nowrap'}}>
                 <button id="play-button" style={stylePlayerButton} onClick={this.onPlayDown} song_id={i} song_name={val.name}>
                 <span style={{fontSize: "30px", color: "rgb(200, 200, 200)", position: "relative", top: "-4px"}}>&#9829;</span>
@@ -54,14 +52,13 @@ class SongTable extends Component {
                 <td></td>
             </tr>
         );
-        // <div style={divStyle}>
         return (
             <div style={divStyle}>
             <table id="songs" style={{width: "100%"}}>
                 <tbody>
                 <tr>
-                    <th></th>
-                    <th></th>
+                    <th style={{width: "30px"}}></th>
+                    <th style={{width: "30px"}}></th>
                     <th></th>
                 </tr>
                 {items}

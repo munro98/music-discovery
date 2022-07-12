@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import { useState, useEffect, useRef } from 'react';
 import { connect } from "react-redux";
 import { Route, Routes, Link, useNavigate } from 'react-router-dom'
 import {
@@ -30,9 +30,36 @@ color:'white'
 function RootNav (props){
   const navigation = useNavigate() // extract navigation prop here
   //console.log("building navigaaaaaaaaaaaation" + navigation); 
-  
 return <NavBar {...props} navigation={navigation} /> //pass to your component.
 
+}
+
+function MusicWrapper(props) {
+  const [counter, setCounter] = useState(0);
+  //https://bobbyhadz.com/blog/react-call-function-in-child-component
+  const musicRef = useRef(null);
+  /*
+  useEffect(() => {
+    console.log("The ref is " + musicRef.current);
+    //musicRef.current.reportVideoTime();
+    const interval = setInterval(() => {
+      setCounter((prevCounter) => prevCounter + 1);
+      console.log("The ref is " + musicRef.current);
+      console.log("The ref is " + counter);
+      
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+  */
+
+  //return (
+  //  <span ref={musicRef}>{counter}</span>
+  //);
+
+  return (
+    <Music {...props} ref={musicRef}></Music>
+  );
 }
 
 export class HomePage extends Component {
@@ -40,7 +67,6 @@ export class HomePage extends Component {
   constructor(props) {
     super(props);
 
-    this.musicComp = React.createRef();
     this.controlBar = React.createRef();
   }
 
@@ -55,10 +81,6 @@ export class HomePage extends Component {
   };
 
   render() {
-    // if(this.props.authState.isAuthenticated) {
-    //  return <Navigate replace to="/profile"/>
-    // }<NavBar></NavBar>
-
     return (
       <div>
         <RootNav lastfm_api={this.props.lastfm_api} ></RootNav>
@@ -74,7 +96,7 @@ export class HomePage extends Component {
               <Route exact path ="/logout" element={<Logout></Logout>}/>
               <Route exact path ="/register" element={<Register></Register>}/>
               <Route exact path ="/secret" element={<Secret></Secret>}/>
-              <Route exact path ="/music" ref={this.musicComp} controlBar={this.controlBar} element={<Music youtube_api={this.props.youtube_api} lastfm_api={this.props.lastfm_api}></Music>}/>
+              <Route exact path ="/music" controlBar={this.controlBar} element={<MusicWrapper youtube_api={this.props.youtube_api} lastfm_api={this.props.lastfm_api}></MusicWrapper>}/>
             </Routes>
         </div>
         <br></br>

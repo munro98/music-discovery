@@ -1,14 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import {
-  Button,
-  Card,
- CardTitle,
-  CardSubtitle,
-  CardBody
-} from "reactstrap";
 import PropTypes from "prop-types";
-import { Navigate } from 'react-router-dom'
 import { logout } from '../actions/authActions';
 import { buttonReset, setPlayingSong, setCurrentPlaylist} from '../actions/uiActions';
 import {CHANGE_ARTIST, SET_PLAYING_ARTIST} from '../reducers/musicReducer';
@@ -67,6 +59,8 @@ export class Music extends Component {
 
         this.updateContent = this.updateContent.bind(this);
 
+        this.reportVideoTime = this.reportVideoTime.bind(this);
+
         //this.onPlayDown = this.onPlayDown.bind(this);
         //this.loadAnother = this.loadAnother.bind(this);
     }
@@ -77,6 +71,11 @@ export class Music extends Component {
     buttonReset: PropTypes.func.isRequired,
     logout: PropTypes.func.isRequired,
   };
+
+  reportVideoTime() {
+    console.log("MUSIC.reportVideoTime()")
+    this.ytPlayer.current.reportVideoTime();
+  }
 
   onLogout = (e) => {
     e.preventDefault();
@@ -378,9 +377,6 @@ export class Music extends Component {
               <SimilarArtistsTable similarArtists={this.state.artistSimilar} callbackHandler={this.callbackHandler}></SimilarArtistsTable>
             </div>
             </div>
-        
-        
-        
     </div>
     )
   }

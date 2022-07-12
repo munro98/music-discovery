@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+
 import PropTypes from 'prop-types'
 
 import YouTube from 'react-youtube';
@@ -28,21 +29,19 @@ class EmbededYoutube extends Component {
     }
 
     componentDidMount() {
-        
     }
-
-    onReady(e) {
-    }
-
     reportVideoTime(){
-        if (this.getPlayerState() == 1 || this.getPlayerState() == 2) {
-            let factor = this.player.getCurrentTime()/this.player.getDuration();
-            console.log("send" + factor);
-            if (factor >= 0.0 || factor <= 1.0 && !isNaN(factor)) {
-                let event = new CustomEvent('build', { detail: {action: "UPDATE_PROGRESS", value: factor} });
-                document.getElementById("control-bar").dispatchEvent(event);
+        if (this.player != undefined) {
+            if (this.getPlayerState() == 1 || this.getPlayerState() == 2) {
+                let factor = this.player.getCurrentTime()/this.player.getDuration();
+                //console.log("send" + factor);
+                if (factor >= 0.0 || factor <= 1.0 && !isNaN(factor)) {
+                    let event = new CustomEvent('build', { detail: {action: "UPDATE_PROGRESS", value: factor} });
+                    document.getElementById("control-bar").dispatchEvent(event);
+                }
             }
         }
+        
     }
 
     setVideoTime(f){
@@ -151,7 +150,7 @@ class EmbededYoutube extends Component {
         // access to player in all event handlers via event.target
         this.player = e.target;
         e.target.pauseVideo();
-
+        ///*
         let self = this;
             setInterval(function()  {
             //console.log(self.player.getCurrentTime());
@@ -162,6 +161,7 @@ class EmbededYoutube extends Component {
 
         }
         ,2000);
+        //*/
     }
 
     // https://getbootstrap.com/docs/4.0/utilities/embed/
@@ -179,22 +179,30 @@ class EmbededYoutube extends Component {
     }
 }
 
-export const ytem = ({ embedId }) => (
-    <div className="video-responsive">
-      <iframe
-        width="853"
-        height="480"
-        src={`https://www.youtube.com/embed/${embedId}`}
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-        title="Embedded youtube"
-      />
-    </div>
-  );
+/*
+// Wrap the player in functional component so I can use setInterval with useEffect hook
+export default function EmbededYoutubeWrapper(props) {
+    //const [counter, setCounter] = useState(0);
+    //https://bobbyhadz.com/blog/react-call-function-in-child-component
+    const childRef = useRef(null);
+  
+    useEffect(() => {
+      const interval = setInterval(() => {
+        //setCounter((prevCounter) => prevCounter + 1);
+        childRef.current.reportVideoTime();
+      }, 1000);
+  
+      return () => clearInterval(interval);
+    }, []);
+  
+    return (
+      <EmbededYoutube {...props} ref={childRef}></EmbededYoutube>
+    );
+  }
+  */
+
 
 export default EmbededYoutube
-
 export {
     VIEW_CALLBACK_ENUMS as EmbededYoutube_CB_ENUMS,
   };

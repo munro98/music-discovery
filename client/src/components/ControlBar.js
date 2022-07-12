@@ -37,7 +37,6 @@ const footerStyle = {
     backgroundColor: "#f5f5f5"
   }
 
-  
 class ControlBar extends Component {
 
     constructor(props) {
@@ -63,12 +62,10 @@ class ControlBar extends Component {
     componentDidMount() {
         let self = this;
         document.getElementById("control-bar").addEventListener('build', function (e) {
-            
             if (e.detail.action == "UPDATE_PROGRESS") { 
-                
                 let factor = e.detail.value;
                 if (factor >= 0.0 || factor <= 1.0 && !isNaN(factor)) {
-                    console.log("UPDATE_PROGRESS" + e.detail.value);
+                    //console.log("UPDATE_PROGRESS" + e.detail.value);
                     self.slider.current.setFactor(factor);
                 }
             }

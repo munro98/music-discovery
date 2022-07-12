@@ -12,6 +12,7 @@ const initialState = {
     selectedArtist: "Cher",
     playingArtist: "Cher",
     playingSong: "-",
+    videoProgress: 0.0,
     controlBarText: "Play Some Music!",
     currentPlaylist: [],
     currentIndex: 0
