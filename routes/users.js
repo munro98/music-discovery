@@ -3,7 +3,7 @@ const router = express.Router();
 const { registerUser, loginUser, logoutUser, authChecker} = require("../controllers/AuthController");
 const { registerLimiter, loginLimiter } = require("../utils/rateLimiter");
 
-const { getSecret, saveTrack} = require("../controllers/UserController");
+const { getSecret, saveTrack, containedInUser} = require("../controllers/UserController");
 
 // Registers a new User
 router.post("/register", registerLimiter, registerUser );
@@ -26,5 +26,7 @@ router.delete("/logout", logoutUser );
 // Needs cookie containing sessionID
 router.get("/authchecker", authChecker )
 .get("/secret", getSecret);
+
+router.post("/contained_in", containedInUser )
 
 module.exports = router;

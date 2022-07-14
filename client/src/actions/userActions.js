@@ -35,6 +35,21 @@ export const deleteTrack = ({ name, artist }) => (dispatch) => {
   });
 }
 
+// send a list of artists with song names and check they are in users profile
+export const containedInUser = ({data}) => (dispatch) => {
+  console.log(data);
+  axios
+  .post("/api/users/contained_in", {data} ,{withCredentials:true})
+  .then((res) =>
+      dispatch({
+      payload: res.data
+      })
+  )
+  .catch((err) => {
+      
+  });
+}
+
 // get the list of songs to be displayed
 export const getAllMusic = () => (dispatch) => {
     axios

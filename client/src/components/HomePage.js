@@ -86,7 +86,7 @@ export class HomePage extends Component {
         <RootNav lastfm_api={this.props.lastfm_api} ></RootNav>
       <body>
         
-       <div className="container" style={{paddingTop: "60px", paddingBottom: "60px"}}>
+       <div className="container" style={{paddingTop: "20px", paddingBottom: "60px"}}>
         <div className="main">
 
             <Routes>

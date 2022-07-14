@@ -21,15 +21,17 @@ import EmbededYoutube from './EmbededYoutube';
 import { 
   EmbededYoutube_CB_ENUMS,
 } from './EmbededYoutube';
-import ytem from './EmbededYoutube';
 
 import SimilarArtistsTable from './SimilarArtistsTable';
 
+import { containedInUser } from '../actions/userActions';
+
 /*
-Fix Search bar autofill suggestions hanging around 
 Show favourited with Red heart on profile page
-Store favourited songs
+show favourited songs
 Make forward and back buttons work
+Detect browser back navigate
+https://stackoverflow.com/questions/39342195/intercept-handle-browsers-back-button-in-react-router
 */
 
 export class Music extends Component {
@@ -51,6 +53,7 @@ export class Music extends Component {
           artistImage: "",
           artistSimilar: [],
           artistTopSongs: [],
+          artistTopSongsFavourites: [],
           ytId: "nZXRV4MezEw",
         }
         this.ytPlayer = React.createRef();
@@ -171,6 +174,12 @@ export class Music extends Component {
           console.log(data);
           let top = data.toptracks.track;
           this.setState({artistTopSongs: top});
+
+          let extractArtistSongName = top.map( (val, i) => ({artist: val.artist.name, name: val.name}));
+          console.log(extractArtistSongName);
+          let d = {data: extractArtistSongName}
+          let favs = this.props.containedInUser(d);
+
           //let vID = this.getVID(data.toptracks.track[0].name);
           //this.setState({ytId: vID});
         }).catch(err => {
@@ -192,10 +201,6 @@ export class Music extends Component {
         }).catch(err => {
           console.log('The request failed!!!! ' + err); 
         });
-
-        
-
-
   }
 
   callbackHandler = (type, data) => {
@@ -335,7 +340,6 @@ export class Music extends Component {
             <div className="row" >
                 <div className="col">
                     <EmbededYoutube ref={this.ytPlayer} videoId={this.state.ytId} callbackHandler={this.callbackHandler}> </EmbededYoutube>
-                    <br></br>
                     
                 </div>
             </div>
@@ -405,4 +409,4 @@ const setPlayingArtist = ( artistName) => (dispatch) => {
   });
 };
 
-export default connect(mapStateToProps, { logout, buttonReset, changeArtist, setPlayingSong, setPlayingArtist, setCurrentPlaylist })(Music);
+export default connect(mapStateToProps, { logout, buttonReset, changeArtist, setPlayingSong, setPlayingArtist, setCurrentPlaylist, containedInUser })(Music);

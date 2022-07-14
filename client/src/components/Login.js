@@ -74,7 +74,7 @@ onSubmit = (e) => {
   render() {
 
     if(this.props.authState.isAuthenticated) {
-      return <Navigate exact to="/profile" />
+      return <Navigate exact to="/" />
       }
 
     let className = 'divStyle';
