@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import axios from "axios";
+
 import { logout } from '../actions/authActions';
 import { buttonReset, setPlayingSong, setCurrentPlaylist} from '../actions/uiActions';
 import {CHANGE_ARTIST, SET_PLAYING_ARTIST} from '../reducers/musicReducer';
@@ -53,7 +55,7 @@ export class Music extends Component {
           artistImage: "",
           artistSimilar: [],
           artistTopSongs: [],
-          artistTopSongsFavourites: [],
+          heartedSongs: new Set(),
           ytId: "nZXRV4MezEw",
         }
         this.ytPlayer = React.createRef();
@@ -178,7 +180,21 @@ export class Music extends Component {
           let extractArtistSongName = top.map( (val, i) => ({artist: val.artist.name, name: val.name}));
           console.log(extractArtistSongName);
           let d = {data: extractArtistSongName}
-          let favs = this.props.containedInUser(d);
+          //let favs = this.props.containedInUser(d);
+          axios
+          .post("/api/users/contained_in", d ,{withCredentials:true})
+          .then((res) => {
+            
+            //console.log(res);
+            let names = res.data.map((track) => track.name);
+            this.setState({heartedSongs: new Set(names)});
+            console.log(new Set(names));
+          } 
+          )
+          .catch((err) => {
+            console.log(err);
+          });
+
 
           //let vID = this.getVID(data.toptracks.track[0].name);
           //this.setState({ytId: vID});
@@ -187,7 +203,7 @@ export class Music extends Component {
           console.log('The request failed!!!! ' + err); 
         });
 
-        let urlRecentSongs = "http://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=" + imePesme + "&api_key=" + this.props.lastfm_api + "&limit=20&format=json"
+      let urlRecentSongs = "http://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=" + imePesme + "&api_key=" + this.props.lastfm_api + "&limit=20&format=json"
       fetch(urlRecentSongs).then(response => {
           return response.json();
         }).then(data => {
@@ -368,7 +384,7 @@ export class Music extends Component {
             <div className="row" >
             <div className="col-sm-6">
               <h5>Top Songs</h5>
-              <SongTable songs={this.state.artistTopSongs} callbackHandler={this.callbackHandler}></SongTable>
+              <SongTable songs={this.state.artistTopSongs} heartedSongs={this.state.heartedSongs} callbackHandler={this.callbackHandler}></SongTable>
               <br></br>
               <br></br>
             </div>

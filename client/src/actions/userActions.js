@@ -23,8 +23,9 @@ export const saveTrack = ({ name, artist }) => (dispatch) => {
 }
 
 export const deleteTrack = ({ name, artist }) => (dispatch) => {
+  //https://stackoverflow.com/questions/51069552/axios-delete-request-with-body-and-headers
   axios
-  .delete("/api/users/track", { name, artist }, {withCredentials:true})
+  .delete("/api/users/track", { data: { name, artist }}, {withCredentials:true})
   .then((res) =>
       dispatch({
       payload: res.data

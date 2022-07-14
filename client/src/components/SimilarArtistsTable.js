@@ -24,7 +24,7 @@ class SimilarArtistsTable extends Component {
         let items = list.map( (val, i) =>
             <tr key={i}>
                 <td><img height="40px" src={val.image[val.image.length-1][Object.keys(val.image[val.image.length-1])[0]]} alt="artist" /></td>
-                <td><button class="btn btn-link" ind={i} onClick={this.onClickArtist}>{val.name}</button></td>
+                <td><button className="btn btn-link" ind={i} onClick={this.onClickArtist}>{val.name}</button></td>
             </tr>
 
         );

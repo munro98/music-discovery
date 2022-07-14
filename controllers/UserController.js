@@ -60,12 +60,18 @@ exports.deleteTrack = async (req, res) => {
         try {
             console.log(req);
 
-            Track.deleteOne( { user: sessUser.id, name: req.body.name, artist: req.body.artist }, (err,res) => {
+            Track.deleteOne( { user: sessUser.id, name: req.body.name, artist: req.body.artist }, (err,r) => {
                 if (err) {
                     console.log(err);
                     res.status(400).json({ msg: "Error" });
                 }
-                res.json({ msg: "Success" });
+                //console.log(r);
+                if (r.deletedCount > 0) {
+                    console.log("Deleted");
+                    res.json({ msg: "Success" });
+                } else {
+                    res.status(400).json({ msg: "Error deleting track" });
+                } 
             }); 
         } catch (e) {
             res.status(400).json({ msg: "Error deleting track" });

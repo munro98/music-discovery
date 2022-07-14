@@ -142,9 +142,9 @@ class ControlBar extends Component {
             <div>
             <Slider ref={this.slider} onChange={this.onSongSeekChange}></Slider>
             <div style={{float : "left", marginLeft: "12px", marginBottom: "18px", color: "rgb(240, 240, 240)"}}>
-            <span > <button class="btn btn-link" style={{color: "rgb(240, 240, 240)", height: "26px"}} onClick={this.onClickArtist}> {this.props.music.playingArtist} </button> </span>
+            <span > <button className="btn btn-link" style={{color: "rgb(240, 240, 240)", height: "26px"}} onClick={this.onClickArtist}> {this.props.music.playingArtist} </button> </span>
             <br></br>
-            <span > <button class="btn btn-link" style={{color: "rgb(240, 240, 240)", height: "26px", textDecoration: "none"}} onClick={this.onClickArtist}> {this.props.music.playingSong} </button> </span>
+            <span > <button className="btn btn-link" style={{color: "rgb(240, 240, 240)", height: "26px", textDecoration: "none"}} onClick={this.onClickArtist}> {this.props.music.playingSong} </button> </span>
             </div>
             </div>
             </div>

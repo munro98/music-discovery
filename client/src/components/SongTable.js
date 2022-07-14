@@ -45,9 +45,16 @@ class SongTable extends Component {
         //console.log(this.props.songs[id]);
 
         const track = this.props.songs[id];
-        console.log("saving " + track.artist.name + " - " + track.name);
+        
         const t = {name: track.name, artist: track.artist.name};
-        this.props.saveTrack(t);
+        if (this.props.heartedSongs.has(track.name)) {
+            console.log("delete " + track.artist.name + " - " + track.name);
+            this.props.deleteTrack(t);
+        } else {
+            console.log("saving " + track.artist.name + " - " + track.name);
+            this.props.saveTrack(t);
+        }
+        
     }
 
     render() {
@@ -56,7 +63,12 @@ class SongTable extends Component {
             <tr key={i} style={ i % 2 === 0 ? {backgroundColor: "rgba(0,0,0, 0.1)"} : {backgroundColor: "rgba(0,0,0, 0.0)"} }>
                 <td style={{verticalAlign: "center",overflow: 'hidden', whiteSpace: 'nowrap'}}>
                 <button id="hear-button" style={stylePlayerButton} onClick={this.onHeartPress} song_id={i} song_name={val.name}>
-                <span style={{fontSize: "30px", color: "rgb(200, 200, 200)", position: "relative", top: "-4px"}}>&#9829;</span>
+                    {this.props.heartedSongs.has(val.name) ? (
+                        <span style={{fontSize: "30px", color: "rgb(235, 33, 33)", position: "relative", top: "-4px"}}>&#9829;</span>
+                    ) : (
+                        <span style={{fontSize: "30px", color: "rgb(200, 200, 200)", position: "relative", top: "-4px"}}>&#9829;</span>
+                    )}
+                
                 </button>
                 </td>
                 <td style={{overflow: 'hidden', whiteSpace: 'nowrap'}}>
