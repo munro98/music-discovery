@@ -26,7 +26,6 @@ exports.saveTrack = async (req, res) => {
     if (sessUser) {
         try {
             //console.log("save -----------" + track)
-
             User.findById(sessUser.id ).then((user) => {
                 if (!user) return res.status(400).json("Error");
     
@@ -169,10 +168,6 @@ exports.containedInUser = async (req, res) => {
                 
             }
             Promise.all(promises).then((values) => {
-
-                //for (let i = 0; i++; i < values.length) {
-                //    return_data.push(values[i].val);
-                //}
                 //console.log(values);
                 let return_data = values.filter(track => track != undefined);
                 console.log(return_data);
@@ -188,29 +183,23 @@ exports.containedInUser = async (req, res) => {
     }
 };
 
-exports.getAllMusic = async (req, res) => {
+exports.getAllTracks = async (req, res) => {
     const sessUser = req.session.user;
     const {track} = req.body;
     if (sessUser) {
         const options = {
             sort: { date_added: 1 },
           };
-        const cursor = Track.find({user: sessUser.id}, options)
-        if ((await cursor.count()) === 0) {
-            console.log("No documents found!");
-            res.status(200).json({
-                status: "Success",
-                data: []
-            });
-          }
-        const allValues = await cursor.toArray();
-        console.log(allValues);
+        const cursor = Track.find({user: sessUser.id}, (err, r) => {
+            if (err) {
+                res.status(400).json({ msg: "Error" });
+            }
+            console.log(r);
+            let return_data = r.map((t) => ({name: t.name, artist: t.artist}));
+            res.status(200).json(return_data);
 
-        res.status(200).json({
-            status: "Success",
-            results: allValues.length,
-            data: allValues
-        });
+        })
+
     } else {
       return res.status(401).json({ msg: "Unauthorized" });
     }

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import axios from "axios";
+
 import {
   Button,
   Card,
@@ -34,7 +36,9 @@ export class Profile extends Component {
       activeSongName: "None selected",
       artistName: "",
       artistURL: "",
-      ytId: ""
+      ytId: "",
+      artistTopSongs: [],
+      heartedSongs: new Set(),
     }
     this.ytPlayer = React.createRef();
     this.controlBar = React.createRef();
@@ -47,52 +51,32 @@ export class Profile extends Component {
     logout: PropTypes.func.isRequired,
   };
 
+  componentDidMount() {
+
+    axios
+    .get("/api/users/track",{withCredentials:true})
+    .then((res) => {
+      console.log(res);
+      let tracks = res.data;
+      let names = res.data.map((track) => track.name);
+      this.setState({
+        artistTopSongs: tracks,
+        heartedSongs: new Set(names)
+      });
+      //console.log(new Set(names));
+    } 
+    )
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
 
   onLogout = (e) => {
     e.preventDefault();
     this.props.buttonReset();
     this.props.logout();
   };
-
-  render2() {
-    if(!this.props.authState.isAuthenticated) {
-      return <Navigate exact to="/login" />
-    }
-
-    const {user} = this.props.authState;
-
-    return (
-      <div className="container-fluid" id="main-music-app">
-         
-      <div className="row" >
-          <div className="row" >
-              <div className="col-sm-6">
-              <Card>
-            <CardBody>
-          <CardTitle><h1>{ user ? `Welcome, ${user.name} ${this.props.authState.isAuthenticated}`: ''} <span role="img" aria-label="party-popper">🎉 </span> </h1></CardTitle>
-          <br/>
-           <CardSubtitle><h5> You are now Logged In <span role="img" aria-label="clap">👏 </span></h5></CardSubtitle>
-          <br/>
-        <Button size="lg" onClick={this.onLogout} color="primary">Logout</Button>
-            </CardBody>
-          </Card>
-              </div>
-          </div>
-
-          <div className="col-sm-6">
-            <SongTable songs={this.state.artistTopSongs} callbackHandler={this.callbackHandler}></SongTable>
-          </div>
-          <div className="col-sm-6">
-          
-          <p >
-          {this.state.artistBio + " "} 
-          <a href={this.state.artistURL}>LastFM Link</a>
-          </p>
-          </div>
-      </div>
-  </div>
-    )
-  }
 
   render() {
     if(!this.props.authState.isAuthenticated) {
@@ -108,16 +92,16 @@ export class Profile extends Component {
          
         <div className="row" >
             <div className="row" >
-                <div className="col-sm-6">
+                <div className="col">
                     <EmbededYoutube ref={this.ytPlayer} YTid={this.state.ytId} callbackHandler={this.callbackHandler}> </EmbededYoutube>
                     <br></br>
                     <br></br>
                 </div>
             </div>
-            <div className="col-sm-6">
+            <div className="col">
             <h2> Profile of {user.name}</h2>
-            <h5> My favourite Music <span role="img" aria-label="clap">👏 </span></h5>
-              <SongTable songs={[]} callbackHandler={this.callbackHandler}></SongTable>
+            <h5> My Hearted Music</h5>
+              <SongTable songs={this.state.artistTopSongs} heartedSongs={this.state.heartedSongs} showArtistName={true} callbackHandler={this.callbackHandler}></SongTable>
               <br></br>
               <br></br>
             </div>        

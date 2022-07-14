@@ -79,7 +79,12 @@ class SongTable extends Component {
                     </svg>
                 </button>
                 </td>
-                <td style={{verticalAlign: "center"}}> <span style={{align: "left"}}>{" " + i}</span>{" -  " + val.name }</td>
+                {this.props.showArtistName ? (
+                    <td style={{verticalAlign: "center"}}> <span style={{align: "left"}}>{" " + i}</span>{" -  " + val.artist + " - " + val.name }</td>
+                ) : (
+                    <td style={{verticalAlign: "center"}}> <span style={{align: "left"}}>{" " + i}</span>{" -  " + val.name }</td>
+                )}
+                
                 <td></td>
             </tr>
         );
