@@ -29,13 +29,10 @@ import SimilarArtistsTable from './SimilarArtistsTable';
 import { containedInUser } from '../actions/userActions';
 
 /*
-Show favourited with Red heart on profile page
-show favourited songs
 Make forward and back buttons work
 Detect browser back navigate
 https://stackoverflow.com/questions/39342195/intercept-handle-browsers-back-button-in-react-router
 */
-
 export class Music extends Component {
 
     constructor(props) {
@@ -63,11 +60,7 @@ export class Music extends Component {
         this.currentFocus = undefined;
 
         this.updateContent = this.updateContent.bind(this);
-
         this.reportVideoTime = this.reportVideoTime.bind(this);
-
-        //this.onPlayDown = this.onPlayDown.bind(this);
-        //this.loadAnother = this.loadAnother.bind(this);
     }
 
   static propTypes = {
@@ -150,7 +143,7 @@ export class Music extends Component {
   updateContent() {
     let imePesme = this.props.music.selectedArtist.replace(/&/g, '%26');
     let url = "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + imePesme + "&api_key=" + this.props.lastfm_api + "&format=json" //C%C3%A9line+Dion
-    ///*
+    
     fetch(url).then(response => {
         return response.json();
       }).then(data => {
@@ -159,7 +152,7 @@ export class Music extends Component {
         //console.log(name);
         let bio = data.artist.bio.summary.replace(/<\/?[^>]+(>|$)/g, "");
         let tags = data.artist.tags.tag;
-        let image = data.artist.image;//[data.artist.image.length-1];
+        let image = data.artist.image;
         let url = data.artist.url;
         let similar = data.artist.similar.artist;
         this.setState({artistName: name, artistURL: url, artistBio: bio, artistTags: tags, artistSimilar: similar});
@@ -167,7 +160,7 @@ export class Music extends Component {
         this.setState({artistName: "Request Error"});
         console.log('The request failed!!!! ' + err); 
       });
-      //*/
+      
 
       let urlTopSongs = "http://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=" + imePesme + "&api_key=" + this.props.lastfm_api + "&limit=20&format=json"
       fetch(urlTopSongs).then(response => {
@@ -180,7 +173,7 @@ export class Music extends Component {
           let extractArtistSongName = top.map( (val, i) => ({artist: val.artist.name, name: val.name}));
           console.log(extractArtistSongName);
           let d = {data: extractArtistSongName}
-          //let favs = this.props.containedInUser(d);
+
           axios
           .post("/api/users/contained_in", d ,{withCredentials:true})
           .then((res) => {
@@ -195,9 +188,6 @@ export class Music extends Component {
             console.log(err);
           });
 
-
-          //let vID = this.getVID(data.toptracks.track[0].name);
-          //this.setState({ytId: vID});
         }).catch(err => {
           this.setState({artistName: "Request Error"});
           console.log('The request failed!!!! ' + err); 
@@ -227,24 +217,34 @@ export class Music extends Component {
       this.props.setPlayingSong(data.songName);
       //this.props.setCurrentPlaylist(this.state.artistTopSongs); TODO
       this.props.setPlayingArtist(this.props.music.selectedArtist);
-
       this.setState({songIndex : data.songId});
       this.onPlayFromTable(data.songName);
-
       break;
+
+      case SONG_TABLE_CB_ENUMS.HEART:
+      console.log("HEART " + data.songName)
+      //https://stackoverflow.com/questions/44482788/using-a-set-data-structure-in-reacts-state
+      if (data.isDelete) {
+          let newHearted = new Set(this.state.heartedSongs);
+          newHearted.delete(data.songName);
+          this.setState({heartedSongs : newHearted});
+      } else {
+          this.setState({heartedSongs : new Set(this.state.heartedSongs).add(data.songName)});
+      }
+      break;
+
       case ControlBar_CB_ENUMS.PLAY:
       //this.ytPlayer.current.playVideo();
       //this.props.callbackHandler(type, data);
       //console.log("play " + data)
       //this.props.setPlayingSong(this.state.artistTopSongs[this.state.songIndex].name);
       //this.props.setPlayingArtist(this.props.music.selectedArtist);
-
-
       if (this.state.songIndex <= this.state.artistTopSongs.length) {
         this.onPlayFromTable(this.state.artistTopSongs[this.state.songIndex].name);
       }
       
       break;
+
       case ControlBar_CB_ENUMS.PREV:
       if (this.state.songIndex > 1) {
         let newI = this.state.songIndex - 1;
@@ -254,6 +254,7 @@ export class Music extends Component {
           this.onPlayFromTable(this.state.artistTopSongs[this.state.songIndex].name);
       }
       break;
+      
       case ControlBar_CB_ENUMS.NEXT:
       if (this.state.songIndex < this.state.artistTopSongs.length) {
           let newI = this.state.songIndex + 1;
@@ -316,7 +317,6 @@ export class Music extends Component {
         this.setState({artistName: "YT Request Error"});
         console.log('The request failed!!!! ' + err); 
       });
-
   }
 
   onPlayFromTable(songName) {
@@ -351,7 +351,6 @@ export class Music extends Component {
     
     return (
        <div className="container-fluid" id="main-music-app">
-         
         <div className="row" >
             <div className="row" >
                 <div className="col">
@@ -401,7 +400,6 @@ export class Music extends Component {
     )
   }
 }
-
 
 const mapStateToProps = (state) => ({ //Maps state to redux store as props
   button: state.ui.button,

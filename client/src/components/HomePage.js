@@ -35,9 +35,9 @@ return <NavBar {...props} navigation={navigation} /> //pass to your component.
 }
 
 function MusicWrapper(props) {
-  const [counter, setCounter] = useState(0);
+  //const [counter, setCounter] = useState(0);
   //https://bobbyhadz.com/blog/react-call-function-in-child-component
-  const musicRef = useRef(null);
+  //const musicRef = useRef(null);
   /*
   useEffect(() => {
     console.log("The ref is " + musicRef.current);
@@ -58,7 +58,7 @@ function MusicWrapper(props) {
   //);
 
   return (
-    <Music {...props} ref={musicRef}></Music>
+    <Music {...props}></Music>
   );
 }
 
@@ -96,7 +96,7 @@ export class HomePage extends Component {
               <Route exact path ="/logout" element={<Logout></Logout>}/>
               <Route exact path ="/register" element={<Register></Register>}/>
               <Route exact path ="/secret" element={<Secret></Secret>}/>
-              <Route exact path ="/music" controlBar={this.controlBar} element={<MusicWrapper youtube_api={this.props.youtube_api} lastfm_api={this.props.lastfm_api}></MusicWrapper>}/>
+              <Route exact path ="/music" element={<MusicWrapper youtube_api={this.props.youtube_api} lastfm_api={this.props.lastfm_api}></MusicWrapper>}/>
             </Routes>
         </div>
         <br></br>

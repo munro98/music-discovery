@@ -38,23 +38,30 @@ class SongTable extends Component {
             {songName : songName, songID : id});
     }
 
-    // For saving/delete from favourite tracks
+    // For saving/delete from hearted tracks
     onHeartPress(e) {
         let id = e.currentTarget.getAttribute('song_id');
         let songName = e.currentTarget.getAttribute('song_name');
         //console.log(this.props.songs[id]);
-
+    
         const track = this.props.songs[id];
         
         const t = {name: track.name, artist: track.artist.name};
         if (this.props.heartedSongs.has(track.name)) {
             console.log("delete " + track.artist.name + " - " + track.name);
             this.props.deleteTrack(t);
+    
+            this.props.callbackHandler(
+                VIEW_CALLBACK_ENUMS.HEART,
+                {songName : songName, songID : id, isDelete: true});
         } else {
             console.log("saving " + track.artist.name + " - " + track.name);
             this.props.saveTrack(t);
+    
+            this.props.callbackHandler(
+                VIEW_CALLBACK_ENUMS.HEART,
+                {songName : songName, songID : id, isDelete: false});
         }
-        
     }
 
     render() {
@@ -80,7 +87,7 @@ class SongTable extends Component {
                 </button>
                 </td>
                 {this.props.showArtistName ? (
-                    <td style={{verticalAlign: "center"}}> <span style={{align: "left"}}>{" " + i}</span>{" -  " + val.artist + " - " + val.name }</td>
+                    <td style={{verticalAlign: "center"}}> <span style={{align: "left"}}>{" " + i}</span>{" -  " + val.artist.name + " - " + val.name }</td>
                 ) : (
                     <td style={{verticalAlign: "center"}}> <span style={{align: "left"}}>{" " + i}</span>{" -  " + val.name }</td>
                 )}

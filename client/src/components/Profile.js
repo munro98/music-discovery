@@ -16,9 +16,17 @@ import { logout } from '../actions/authActions';
 import { buttonReset} from '../actions/uiActions';
 
 import EmbededYoutube from './EmbededYoutube';
-
-
+import { 
+  EmbededYoutube_CB_ENUMS,
+} from './EmbededYoutube';
 import SongTable from './SongTable';
+import { 
+  SONG_TABLE_CB_ENUMS,
+} from './SongTable';
+
+import { 
+  ControlBar_CB_ENUMS,
+} from './ControlBar';
 
 export class Profile extends Component {
 
@@ -57,7 +65,10 @@ export class Profile extends Component {
     .get("/api/users/track",{withCredentials:true})
     .then((res) => {
       console.log(res);
-      let tracks = res.data;
+      let tracks = res.data.map(function(track, index) {
+        track.artist = {name: track.artist};
+        return track;
+      });
       let names = res.data.map((track) => track.name);
       this.setState({
         artistTopSongs: tracks,
@@ -71,12 +82,91 @@ export class Profile extends Component {
     });
   }
 
-
   onLogout = (e) => {
     e.preventDefault();
     this.props.buttonReset();
     this.props.logout();
   };
+
+  callbackHandler = (type, data) => {
+    console.log("callbackHandler " + type)
+    switch(type) {
+      case SONG_TABLE_CB_ENUMS.PLAY:
+      console.log("play " + data.songName)
+      this.props.setPlayingSong(data.songName);
+      //this.props.setCurrentPlaylist(this.state.artistTopSongs); TODO
+      this.props.setPlayingArtist(this.props.music.selectedArtist);
+      this.setState({songIndex : data.songId});
+      this.onPlayFromTable(data.songName);
+      case SONG_TABLE_CB_ENUMS.HEART:
+        console.log("HEART " + data)
+      //https://stackoverflow.com/questions/44482788/using-a-set-data-structure-in-reacts-state
+      if (data.isDelete) {
+        let newHearted = new Set(this.state.heartedSongs);
+        newHearted.delete(data.songName);
+        console.log(newHearted);
+        this.setState({heartedSongs : newHearted});
+      } else {
+          this.setState({heartedSongs : new Set(this.state.heartedSongs).add(data.songName)});
+      }
+      break;
+      case ControlBar_CB_ENUMS.PLAY:
+      //this.ytPlayer.current.playVideo();
+      //this.props.callbackHandler(type, data);
+      //console.log("play " + data)
+      //this.props.setPlayingSong(this.state.artistTopSongs[this.state.songIndex].name);
+      //this.props.setPlayingArtist(this.props.music.selectedArtist);
+      if (this.state.songIndex <= this.state.artistTopSongs.length) {
+        this.onPlayFromTable(this.state.artistTopSongs[this.state.songIndex].name);
+      }
+      break;
+      case ControlBar_CB_ENUMS.PREV:
+      if (this.state.songIndex > 1) {
+        let newI = this.state.songIndex - 1;
+          this.setState({songIndex : newI});
+          this.onPlayFromTable(this.state.artistTopSongs[this.state.songIndex].name);
+      } else {
+          this.onPlayFromTable(this.state.artistTopSongs[this.state.songIndex].name);
+      }
+      break;
+      case ControlBar_CB_ENUMS.NEXT:
+      if (this.state.songIndex < this.state.artistTopSongs.length) {
+          let newI = this.state.songIndex + 1;
+          this.setState({songIndex : newI});
+          this.onPlayFromTable(this.state.artistTopSongs[this.state.songIndex].name);
+      }
+      break;
+      case ControlBar_CB_ENUMS.VOLUME_CHANGE:
+      this.ytPlayer.current.setVolVideo(data.value);
+      break;
+      case ControlBar_CB_ENUMS.SEEK_CHANGE:
+      //this.ytPlayer.current.setVolVideo(data);
+      this.ytPlayer.current.setSeekVideo(data.value, false)
+      break;
+      case ControlBar_CB_ENUMS.SEEK_UP:
+      this.ytPlayer.current.setSeekVideo(data.value, true)
+      break;
+      case EmbededYoutube_CB_ENUMS.END:
+        console.log("play next song " )
+        if (this.state.songIndex < this.state.artistTopSongs.length) {
+          let newI = this.state.songIndex + 1;
+          this.setState({songIndex : newI});
+          this.onPlayFromTable(this.state.artistTopSongs[newI].name);
+        }
+      break;
+      case EmbededYoutube_CB_ENUMS.PLAY:
+        this.setState({songDuration: data.duration, songCurrTime: data.time, isPlaying: true});
+      break;
+      case EmbededYoutube_CB_ENUMS.PAUSE:
+        this.setState({songDuration: data.duration, songCurrTime: data.time, isPlaying: false});
+      break;
+      case EmbededYoutube_CB_ENUMS.UPDATE:
+        this.setState({songCurrTime: data.time});
+        //this.controlBar.current.updateProgress(data.time / this.state.songDuration); // TODO: Add progress slider
+      break;
+    default:
+    }
+  }
 
   render() {
     if(!this.props.authState.isAuthenticated) {
