@@ -37,8 +37,8 @@ exports.saveTrack = async (req, res) => {
                 track.save(function (err) {
                     if (err)
                         console.log(err);
-                    console.log("track added!");
-                    console.log(track);
+                    //console.log("track added!");
+                    //console.log(track);
                     res.json({ msg: "Saved track" });
                 });
             });
@@ -57,8 +57,7 @@ exports.deleteTrack = async (req, res) => {
     const {track} = req.body;
     if (sessUser) {
         try {
-            console.log(req);
-
+            //console.log(req);
             Track.deleteOne( { user: sessUser.id, name: req.body.name, artist: req.body.artist }, (err,r) => {
                 if (err) {
                     console.log(err);
@@ -66,8 +65,8 @@ exports.deleteTrack = async (req, res) => {
                 }
                 //console.log(r);
                 if (r.deletedCount > 0) {
-                    console.log("Deleted");
-                    res.json({ msg: "Success" });
+                    //console.log("Deleted");
+                    res.json({ msg: "Deleted" });
                 } else {
                     res.status(400).json({ msg: "Error deleting track" });
                 } 
@@ -89,7 +88,7 @@ exports.containsTrack = async (req, res) => {
     if (sessUser) {
         try {
             const track = [req.body.artist, req.body.name];
-            console.log("checking -----------" + track)
+            //console.log("checking -----------" + track)
 
             //db.inventory.find( { tags: ["red", "blank"] } )
             Track.find( {user: req.session.user.id, name: req.body.data[i].name, artist: req.body.data[i].artist}, (err,res) => {
@@ -140,7 +139,7 @@ exports.containedInUser = async (req, res) => {
                         const track = {name: r[i].name, artist: r[i].artist};
                         tracks.push(track);
                     }
-                    console.log(tracks);
+                    //console.log(tracks);
                     res.json(tracks);
                 } else {
                     res.json([]);
@@ -194,10 +193,9 @@ exports.getAllTracks = async (req, res) => {
             if (err) {
                 res.status(400).json({ msg: "Error" });
             }
-            console.log(r);
+            //console.log(r);
             let return_data = r.map((t) => ({name: t.name, artist: t.artist}));
             res.status(200).json(return_data);
-
         })
 
     } else {

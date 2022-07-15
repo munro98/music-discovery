@@ -29,8 +29,10 @@ import SimilarArtistsTable from './SimilarArtistsTable';
 import { containedInUser } from '../actions/userActions';
 
 /*
+Get profile functionality working
 Make forward and back buttons work
 Detect browser back navigate
+Link artistname on profile page
 https://stackoverflow.com/questions/39342195/intercept-handle-browsers-back-button-in-react-router
 */
 export class Music extends Component {
@@ -254,7 +256,7 @@ export class Music extends Component {
           this.onPlayFromTable(this.state.artistTopSongs[this.state.songIndex].name);
       }
       break;
-      
+
       case ControlBar_CB_ENUMS.NEXT:
       if (this.state.songIndex < this.state.artistTopSongs.length) {
           let newI = this.state.songIndex + 1;
