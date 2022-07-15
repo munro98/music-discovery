@@ -6,8 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon server.js",
+    "server_production": "node server.js",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "production": "concurrently \"npm run server_production\" \"npm run client\""
   },
   "dependencies": {
     "@hapi/joi": "^16.1.8",
