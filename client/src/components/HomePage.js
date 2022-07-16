@@ -16,10 +16,8 @@ import Logout from './Logout';
 import Register from './Register';
 import Secret from './Secret';
 import Profile from './Profile';
-import Home from './Home';
 import Music from './Music';
 import NavBar from './NavBar';
-//import RootNav from './NavBar';
 import ControlBar from './ControlBar';
 
 var divStyle = {
@@ -88,21 +86,22 @@ export class HomePage extends Component {
         
        <div className="container" style={{paddingTop: "20px", paddingBottom: "60px"}}>
         <div className="main">
-
             <Routes>
             <Route exact path ="/" element={<Music youtube_api={this.props.youtube_api} lastfm_api={this.props.lastfm_api}></Music>}/>
               <Route exact path ="/profile" element={<Profile></Profile>}/>
               <Route exact path ="/login" element={<Login></Login>}/>
               <Route exact path ="/logout" element={<Logout></Logout>}/>
               <Route exact path ="/register" element={<Register></Register>}/>
-              <Route exact path ="/secret" element={<Secret></Secret>}/>
               <Route exact path ="/music" element={<MusicWrapper youtube_api={this.props.youtube_api} lastfm_api={this.props.lastfm_api}></MusicWrapper>}/>
             </Routes>
         </div>
         <br></br>
         <br></br>
     </div>
-    <ControlBar ref={this.controlBar}></ControlBar>
+    <Routes>
+      <Route exact path ="/" element={<ControlBar ref={this.controlBar}></ControlBar>}/>
+      <Route exact path ="/profile" element={<ControlBar ref={this.controlBar}></ControlBar>}/>
+    </Routes>
       </body>
       </div>
     )

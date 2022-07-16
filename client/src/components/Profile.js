@@ -2,13 +2,6 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import axios from "axios";
 
-import {
-  Button,
-  Card,
- CardTitle,
-  CardSubtitle,
-  CardBody
-} from "reactstrap";
 import PropTypes from "prop-types";
 import './style.css';
 import { Navigate } from 'react-router-dom'
@@ -98,6 +91,8 @@ export class Profile extends Component {
       this.props.setPlayingArtist(this.props.music.selectedArtist);
       this.setState({songIndex : data.songId});
       this.onPlayFromTable(data.songName);
+      break;
+      
       case SONG_TABLE_CB_ENUMS.HEART:
         console.log("HEART " + data)
       //https://stackoverflow.com/questions/44482788/using-a-set-data-structure-in-reacts-state

@@ -7,14 +7,13 @@ import { logout } from '../actions/authActions';
 import { buttonReset, setPlayingSong, setCurrentPlaylist} from '../actions/uiActions';
 import {CHANGE_ARTIST, SET_PLAYING_ARTIST} from '../reducers/musicReducer';
 
-import QueryString from 'query-string';
+//import QueryString from 'query-string';
 
 import SongTable from './SongTable';
 import { 
   SONG_TABLE_CB_ENUMS,
 } from './SongTable';
 
-import ControlBar from './ControlBar';
 import { 
   ControlBar_CB_ENUMS,
 } from './ControlBar';
@@ -88,15 +87,15 @@ export class Music extends Component {
     document.getElementById("main-music-app").addEventListener('build', function (e) { 
       console.log(e)
 
-      if (e.detail.action == "PLAY") {
+      if (e.detail.action === "PLAY") {
         let state = self.ytPlayer.current.getPlayerState();
         console.log("state " + state)
-        if (state == 1) {
+        if (state === 1) {
           self.ytPlayer.current.pauseVideo();
-        } else if (state == 2) {
+        } else if (state === 2) {
           self.ytPlayer.current.playVideo();
         }
-      } else if (e.detail.action == "NEXT") {
+      } else if (e.detail.action === "NEXT") {
         if (self.props.music.currentIndex+1 < self.props.music.currentPlaylist.length) {
           // TODO: play next song
           //self.props.skipNext()
@@ -104,7 +103,7 @@ export class Music extends Component {
           //self.onPlayFromTable(self.props.music.playingArtist, self.props.music.currentPlaylist[ind]);
         }
 
-      } else if (e.detail.action == "PREV") {
+      } else if (e.detail.action === "PREV") {
         if (self.props.music.currentIndex-1 >= 0) {
           // TODO: play next song
           //self.props.skipPrev()
@@ -112,14 +111,14 @@ export class Music extends Component {
           //self.onPlayFromTable(self.props.music.playingArtist, self.props.music.currentPlaylist[ind]);
         }
 
-      } else if (e.detail.action == "YT_SONG_END") {
+      } else if (e.detail.action === "YT_SONG_END") {
         if (self.props.music.currentIndex+1 < self.props.music.currentPlaylist.length) {
           // TODO: play next song
           //self.props.skipNext()
           //let ind = self.props.music.currentIndex
           //self.onPlayFromTable(self.props.music.playingArtist, self.props.music.currentPlaylist[ind]);
         }
-      } else if (e.detail.action == "SEEK") {
+      } else if (e.detail.action === "SEEK") {
         console.log("seek to " + e.detail.value)
           self.ytPlayer.current.setSeekVideo(e.detail.value, true);
       }
@@ -137,7 +136,7 @@ export class Music extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     console.log("Music component updating ")
-    if (prevProps.music.selectedArtist != this.props.music.selectedArtist) {
+    if (prevProps.music.selectedArtist !== this.props.music.selectedArtist) {
       this.updateContent();
     }
   }
@@ -154,7 +153,7 @@ export class Music extends Component {
         //console.log(name);
         let bio = data.artist.bio.summary.replace(/<\/?[^>]+(>|$)/g, "");
         let tags = data.artist.tags.tag;
-        let image = data.artist.image;
+        //let image = data.artist.image;
         let url = data.artist.url;
         let similar = data.artist.similar.artist;
         this.setState({artistName: name, artistURL: url, artistBio: bio, artistTags: tags, artistSimilar: similar});
@@ -343,7 +342,7 @@ export class Music extends Component {
   }
   
   render() {
-    const {user} = this.props.authState;
+    //const {user} = this.props.authState;
     let tags = this.state.artistTags.map( (val, i) => 
       <span key={i}>{val.name + ", "}</span>
     );
@@ -372,7 +371,7 @@ export class Music extends Component {
                   </p>
                 </div>
                 <div className="col">
-                  <img src={this.state.artistImage} width="160px" style={{float: "right", marginRight: "16px"}}></img>
+                  <img src={this.state.artistImage} alt="album art" width="160px" style={{float: "right", marginRight: "16px"}}></img>
                 </div>
               </div>
               

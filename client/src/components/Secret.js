@@ -4,12 +4,10 @@ import {
   Button,
   Card,
  CardTitle,
-  CardSubtitle,
   CardBody
 } from "reactstrap";
 import PropTypes from "prop-types";
 import './style.css';
-import { Navigate } from 'react-router-dom'
 import { logout, getSecret, isAuth } from '../actions/authActions';
 import { buttonReset} from '../actions/uiActions';
 import axios from "axios";

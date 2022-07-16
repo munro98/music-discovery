@@ -121,11 +121,11 @@ export class NavBar extends Component {
       let imePesme = item.name.replace(/&/g, '%26');
         this.props.navigation("/music/?artist="+imePesme)
     }
-
     console.log(item)
   }
 
   formatResult(item){
+    // Draw the search suggestions on top
     return (
       <>
         <span style={{ zIndex: '99',display: 'block', textAlign: 'left' }}>{item.name}</span>
@@ -146,15 +146,6 @@ export class NavBar extends Component {
               </NavItem>
               {this.props.authState.isAuthenticated ? (
                 <NavItem>
-                < Link className="nav-link" exact to="/logout">Logout </Link>
-                </NavItem>
-              ):
-                <NavItem>
-                  <Link className="nav-link" exact to="/login">Login </Link>
-                </NavItem>
-              }
-              {this.props.authState.isAuthenticated ? (
-                <NavItem>
                 <Link className="nav-link" exact to="/profile">Profile </Link>
               </NavItem>
               ):
@@ -162,7 +153,15 @@ export class NavBar extends Component {
               <Link className="nav-link" exact to="/register">Register </Link>
             </NavItem>
               }
-              
+              {this.props.authState.isAuthenticated ? (
+                <NavItem>
+                < Link className="nav-link" exact to="/logout">Logout </Link>
+                </NavItem>
+              ):
+                <NavItem>
+                  <Link className="nav-link" exact to="/login">Login </Link>
+                </NavItem>
+              }
               <NavItem style={{width:"240px"}}>
               <ReactSearchAutocomplete
                 styling={{ zIndex: '99'}}
