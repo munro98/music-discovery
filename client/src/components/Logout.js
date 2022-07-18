@@ -8,7 +8,7 @@ import {
 import PropTypes from "prop-types";
 import './style.css';
 import { Navigate } from 'react-router-dom'
-import { logout, getSecret, isAuth } from '../actions/authActions';
+import { logout, isAuth } from '../actions/authActions';
 import { buttonReset} from '../actions/uiActions';
 
 export class Logout extends Component {

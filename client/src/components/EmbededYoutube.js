@@ -32,10 +32,10 @@ class EmbededYoutube extends Component {
     }
     reportVideoTime(){
         if (this.player != undefined) {
-            if (this.getPlayerState() == 1 || this.getPlayerState() == 2) {
+            if (this.getPlayerState() === 1 || this.getPlayerState() === 2) {
                 let factor = this.player.getCurrentTime()/this.player.getDuration();
                 //console.log("send" + factor);
-                if (factor >= 0.0 || factor <= 1.0 && !isNaN(factor)) {
+                if ((factor >= 0.0 || factor <= 1.0) && !isNaN(factor)) {
                     let event = new CustomEvent('build', { detail: {action: "UPDATE_PROGRESS", value: factor} });
                     document.getElementById("control-bar").dispatchEvent(event);
                 }
@@ -184,29 +184,6 @@ class EmbededYoutube extends Component {
         return <YouTube className="video-responsive" videoId={this.props.videoId} opts={opts} onReady={this.onReady} />;
     }
 }
-
-/*
-// Wrap the player in functional component so I can use setInterval with useEffect hook
-export default function EmbededYoutubeWrapper(props) {
-    //const [counter, setCounter] = useState(0);
-    //https://bobbyhadz.com/blog/react-call-function-in-child-component
-    const childRef = useRef(null);
-  
-    useEffect(() => {
-      const interval = setInterval(() => {
-        //setCounter((prevCounter) => prevCounter + 1);
-        childRef.current.reportVideoTime();
-      }, 1000);
-  
-      return () => clearInterval(interval);
-    }, []);
-  
-    return (
-      <EmbededYoutube {...props} ref={childRef}></EmbededYoutube>
-    );
-  }
-  */
-
 
 export default EmbededYoutube
 export {

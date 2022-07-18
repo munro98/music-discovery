@@ -9,8 +9,8 @@ exports.getSecret = (req, res) => {
         User.findById(sessUser.id ).then((user) => {
             if (!user) return res.status(400).json("Error");
 
-            console.log(user.name);
-            console.log(user.secret);
+            //console.log(user.name);
+            //console.log(user.secret);
 
             const data = {secret: user.secret}
             res.json(data); // sends cookie with sessionID automatically in response
@@ -80,7 +80,6 @@ exports.deleteTrack = async (req, res) => {
     }
 };
 
-
 // TODO: untested
 exports.containsTrack = async (req, res) => {
     const sessUser = req.session.user;
@@ -114,8 +113,8 @@ exports.containsTrack = async (req, res) => {
 
 exports.containedInUser = async (req, res) => {
     const sessUser = req.session.user;
-    console.log("containedInUser");
-    console.log(req.body.data);
+    //console.log("containedInUser");
+    //console.log(req.body.data);
     if (sessUser) {
         try {
             let promises = [];
