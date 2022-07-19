@@ -14,6 +14,12 @@ export NVM_DIR="$HOME/.nvm"
 #install node modules
 npm install
 
+#install react server dependencies
+cd /home/ec2-user/app/client
+#install node modules
+npm install -f
+
+cd /home/ec2-user/app
 export MY_SECRET="cool beans"
 
 #start our node app in the background
