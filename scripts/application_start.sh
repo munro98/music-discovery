@@ -22,6 +22,9 @@ npm install -f
 cd /home/ec2-user/app
 export MY_SECRET="cool beans"
 
+#route port web traffic on port 80 to reactjs server on 3000
+sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3000
+
 #start our node app in the background
 #node app.js > app.out.log 2> app.err.log < /dev/null & 
 npm run production > app.out.log 2> app.err.log < /dev/null & 

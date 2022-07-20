@@ -46,22 +46,28 @@ class SongTable extends Component {
     
         const track = this.props.songs[id];
         
-        const t = {name: track.name, artist: track.artist.name};
-        if (this.props.heartedSongs.has(track.name)) {
-            console.log("delete " + track.artist.name + " - " + track.name);
-            this.props.deleteTrack(t);
-    
-            this.props.callbackHandler(
-                VIEW_CALLBACK_ENUMS.HEART,
-                {songName : songName, songID : id, isDelete: true});
+        if(this.props.authState.isAuthenticated) {
+            const t = {name: track.name, artist: track.artist.name};
+            if (this.props.heartedSongs.has(track.name)) {
+                console.log("delete " + track.artist.name + " - " + track.name);
+                this.props.deleteTrack(t);
+        
+                this.props.callbackHandler(
+                    VIEW_CALLBACK_ENUMS.HEART,
+                    {songName : songName, songID : id, isDelete: true});
+            } else {
+                console.log("saving " + track.artist.name + " - " + track.name);
+                this.props.saveTrack(t);
+        
+                this.props.callbackHandler(
+                    VIEW_CALLBACK_ENUMS.HEART,
+                    {songName : songName, songID : id, isDelete: false});
+            }
         } else {
-            console.log("saving " + track.artist.name + " - " + track.name);
-            this.props.saveTrack(t);
-    
-            this.props.callbackHandler(
-                VIEW_CALLBACK_ENUMS.HEART,
-                {songName : songName, songID : id, isDelete: false});
+            //TODO: popup please login to do this action
         }
+
+        
     }
 
     render() {
