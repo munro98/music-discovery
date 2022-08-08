@@ -86,7 +86,7 @@ app.use(cors(corsOptions));
 
 // API / Routes;
 // Uncomment Below for Development
-//app.use("/api/users", require("./routes/users"));
+app.use("/api/users", require("./routes/users"));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname+'/client/build/index.html'));

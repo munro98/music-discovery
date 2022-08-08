@@ -1,6 +1,5 @@
 node_modules
 ignore
 .env
-package-lock.json
-client/package-lock.json
+/package-lock.json
 #/client/src/clientConfig.js
