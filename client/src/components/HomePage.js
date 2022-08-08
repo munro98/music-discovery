@@ -82,7 +82,6 @@ export class HomePage extends Component {
     return (
       <div>
         <RootNav lastfm_api={this.props.lastfm_api} ></RootNav>
-      <body>
         
        <div className="container" style={{paddingTop: "20px", paddingBottom: "60px"}}>
         <div className="main">
@@ -102,7 +101,6 @@ export class HomePage extends Component {
       <Route exact path ="/" element={<ControlBar ref={this.controlBar}></ControlBar>}/>
       <Route exact path ="/profile" element={<ControlBar ref={this.controlBar}></ControlBar>}/>
     </Routes>
-      </body>
       </div>
     )
   }

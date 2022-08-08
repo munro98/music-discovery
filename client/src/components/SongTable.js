@@ -66,8 +66,6 @@ class SongTable extends Component {
         } else {
             //TODO: popup please login to do this action
         }
-
-        
     }
 
     render() {

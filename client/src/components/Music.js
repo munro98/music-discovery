@@ -175,19 +175,25 @@ export class Music extends Component {
           console.log(extractArtistSongName);
           let d = {data: extractArtistSongName}
 
-          axios
-          .post("/api/users/contained_in", d ,{withCredentials:true})
-          .then((res) => {
-            
-            //console.log(res);
-            let names = res.data.map((track) => track.name);
-            this.setState({heartedSongs: new Set(names)});
-            console.log(new Set(names));
-          } 
-          )
-          .catch((err) => {
-            console.log(err);
-          });
+          if(this.props.authState.isAuthenticated) {
+
+            axios
+            .post("/api/users/contained_in", d ,{withCredentials:true})
+            .then((res) => {
+              
+              //console.log(res);
+              let names = res.data.map((track) => track.name);
+              this.setState({heartedSongs: new Set(names)});
+              console.log(new Set(names));
+            } 
+            )
+            .catch((err) => {
+              console.log(err);
+            });
+
+          }
+
+          
 
         }).catch(err => {
           this.setState({artistName: "Request Error"});
