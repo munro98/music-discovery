@@ -9,6 +9,7 @@ const path = require("path");
 const helmet = require('helmet');
 const cors = require('cors');
 
+
 // Constants
 const {
   HOST,
@@ -36,6 +37,8 @@ const mongoDBstore = new MongoDBStore({
   uri: MongoURI,
   collection: "mySessions"
 });
+
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 // Express Bodyparser
 app.use(express.urlencoded({ extended: false }));
@@ -79,7 +82,10 @@ const corsOptionsProd = {
 app.use(cors(corsOptions));
 
 
-router.get("/", (req, res) => res.send("HELLO FRIEND"));
+//router.get("/", (req, res) => res.send("HELLO FRIEND"));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
 
 // API / Routes;
 // Uncomment Below for Development

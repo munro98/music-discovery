@@ -1,4 +1,4 @@
 node_modules
 ignore
 .env
-/client/src/clientConfig.js
+#/client/src/clientConfig.js
