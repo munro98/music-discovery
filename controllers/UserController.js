@@ -113,7 +113,7 @@ exports.containsTrack = async (req, res) => {
 
 exports.containedInUser = async (req, res) => {
     const sessUser = req.session.user;
-    //console.log("containedInUser");
+    console.log("containedInUser");
     //console.log(req.body.data);
     if (sessUser) {
         try {
@@ -184,7 +184,9 @@ exports.containedInUser = async (req, res) => {
 exports.getAllTracks = async (req, res) => {
     const sessUser = req.session.user;
     const {track} = req.body;
+    console.log("getAllTracks");
     if (sessUser) {
+        
         const options = {
             sort: { date_added: 1 },
           };

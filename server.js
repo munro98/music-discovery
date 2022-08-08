@@ -83,16 +83,17 @@ app.use(cors(corsOptions));
 
 
 //router.get("/", (req, res) => res.send("HELLO FRIEND"));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname+'/client/build/index.html'));
-});
 
 // API / Routes;
 // Uncomment Below for Development
 app.use("/api/users", require("./routes/users"));
 
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
+
 //Uncomment Below for Production, routes mounted at /sessions-auth-app and not root domain
 //app.use("/sessions-auth-app/api/users", require("./routes/users"));
 // app.use("/api/auth", require("./routes/auth"));
 
-app.listen(PORT, () => console.log(`Server started on http://${HOST}:${PORT}`));
+app.listen(process.env.PORT || 5000, () => console.log(`Server started on http://${HOST}:${PORT}`));
