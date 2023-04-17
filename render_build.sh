@@ -1,7 +1,7 @@
 #install node modules
 npm install
 #install web server
-npm install -g serve
+npm install serve
 #install react server dependencies
 cd /home/ec2-user/app/client
 #install node modules
