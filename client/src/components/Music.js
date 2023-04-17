@@ -143,7 +143,7 @@ export class Music extends Component {
 
   updateContent() {
     let imePesme = this.props.music.selectedArtist.replace(/&/g, '%26');
-    let url = "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + imePesme + "&api_key=" + this.props.lastfm_api + "&format=json" //C%C3%A9line+Dion
+    let url = "https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=" + imePesme + "&api_key=" + this.props.lastfm_api + "&format=json" //C%C3%A9line+Dion
     
     fetch(url).then(response => {
         return response.json();
@@ -163,7 +163,7 @@ export class Music extends Component {
       });
       
 
-      let urlTopSongs = "http://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=" + imePesme + "&api_key=" + this.props.lastfm_api + "&limit=20&format=json"
+      let urlTopSongs = "https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=" + imePesme + "&api_key=" + this.props.lastfm_api + "&limit=20&format=json"
       fetch(urlTopSongs).then(response => {
           return response.json();
         }).then(data => {
@@ -200,7 +200,7 @@ export class Music extends Component {
           console.log('The request failed!!!! ' + err); 
         });
 
-      let urlRecentSongs = "http://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=" + imePesme + "&api_key=" + this.props.lastfm_api + "&limit=20&format=json"
+      let urlRecentSongs = "https://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=" + imePesme + "&api_key=" + this.props.lastfm_api + "&limit=20&format=json"
       fetch(urlRecentSongs).then(response => {
           return response.json();
         }).then(data => {

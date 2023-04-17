@@ -55,7 +55,7 @@ export class NavBar extends Component {
 
   searchArtist(str) {
     let imePesme = str.replace(/&/g, '%26');
-    let url = "http://ws.audioscrobbler.com/2.0/?method=artist.search&artist=" + imePesme + "&api_key=" + this.props.lastfm_api + "&limit=20&format=json"
+    let url = "https://ws.audioscrobbler.com/2.0/?method=artist.search&artist=" + imePesme + "&api_key=" + this.props.lastfm_api + "&limit=20&format=json"
 
     let suggestions = [];
     fetch(url).then(response => {
